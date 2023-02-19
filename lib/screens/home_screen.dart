@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Song> songs = Song.songs;
-    List<Playlist> playlists = Playlist.playlists;
+    List<Playlist> playlists = [];//Playlist.playlists; //rafraf
 
       return Scaffold(
         backgroundColor: Colors.transparent,
@@ -21,24 +21,24 @@ class HomeScreen extends StatelessWidget {
         bottomNavigationBar: const _CustomNavBar(),
 
         body: Stack(children: [
-      SvgPicture.asset(
-      'assets/images/bg_home_border.svg',
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        alignment: AlignmentDirectional.topStart,
-      ),
-      SvgPicture.asset(
-        'assets/images/bg_moon_home.svg',
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        alignment: AlignmentDirectional.topStart,
-      ),
-      Column(children: [
+          SvgPicture.asset(
+            'assets/images/bg_home_border.svg',
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            alignment: AlignmentDirectional.topStart,
+          ),
+          SvgPicture.asset(
+            'assets/images/bg_moon_home.svg',
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            alignment: AlignmentDirectional.topStart,
+          ),
+          Column(children: [
 
-      Expanded(
-        child: SingleChildScrollView(
-            child: Column(
-              children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
                 const _DiscoverMusic(),
                 _TrendingStories(songs: songs),
                 SizedBox(
@@ -50,7 +50,7 @@ class HomeScreen extends StatelessWidget {
           ),
       ),
       ]),
-    ]),);
+    ],),);
   }
 }
 
@@ -60,13 +60,16 @@ class _PlaylistMusic extends StatelessWidget {
     required this.playlists,
   }) : super(key: key);
 
-  final List<Playlist> playlists;
+  List<Playlist> playlists;
 
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> users =
     FirebaseFirestore.instance.collection('users').snapshots();
-    
+
+    final Stream<QuerySnapshot> firebasePlaylist =
+    FirebaseFirestore.instance.collection('playlist').snapshots();
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -85,42 +88,93 @@ class _PlaylistMusic extends StatelessWidget {
           ),
         ],
          */
-        children: [
+
+          // firebasePlaylist.forEach((element) {
+          //   List<Song> songs = element.docs[0]['stories'].cast<Song>();
+          //   Playlist playList = Playlist(
+          //       title: element.docs[0]['title'],
+          //       songs: songs,
+          //       imageUrl: element.docs[0]['imageUrl']
+          //   );
+          //   playlists.add(playList);
+          // });
+
+          children: [
           SectionHeader(title: 'Recommended Playlists'),
-          StreamBuilder<QuerySnapshot>(
-            stream: users,
-            builder: (
-                BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot,
-            )
-            {
+        StreamBuilder<QuerySnapshot>(
+          stream: firebasePlaylist,
+          builder: (
+              BuildContext context,
+              AsyncSnapshot<QuerySnapshot> snapshot,) {
 
-              if (snapshot.hasError) {
-                return Text('error downloading storeis');
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text('downloading data');
-              }
+            if (snapshot.hasError) {
+              return Text('error downloading storeis');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text('downloading data');
+            }
 
-              final data = snapshot.requireData;
-              print ('size: ${data.size}');
-              //return Text('Raf ${data.docs[1]['firstname']} a raf ${data.docs[1]['surname']}');
+            final data = snapshot.requireData;
+            print ('size: ${data.size}');
+            //return Text('Raf ${data.docs[1]['firstname']} a raf ${data.docs[1]['surname']}');
 
-              return Container(
-                
-                child: Expanded(
-                  
-                  child: ListView.builder(
-                    itemCount: data.size,
-                    itemBuilder: (context, index) {
-                      return Text('Raf ${data.docs[index]['firstname']} a raf ${data.docs[index]['surname']}');
-                    },
-                  ),
+            return Container(
+              child: Expanded(
+                child: ListView.builder(
+                  itemCount: data.size,
+                  itemBuilder: (context, index) {
+                    Playlist pl = Playlist(
+                        title: data.docs[index]['title'],
+                        songs: data.docs[index]['stories'].cast<Song>(),
+                        imageUrl: data.docs[index]['imageUrl'],
+                    );
+                    return PlaylistCard(playlist: pl);
+                    return Text('Raf ${data.docs[index]['title']} a raf ${data.docs[index]['imageUrl']}');
+                  },
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
+        ),
         ],
+
+
+        // children: [
+        //   SectionHeader(title: 'Recommended Playlists'),
+        //   StreamBuilder<QuerySnapshot>(
+        //     stream: users,
+        //     builder: (
+        //         BuildContext context,
+        //         AsyncSnapshot<QuerySnapshot> snapshot,
+        //     )
+        //     {
+        //
+        //       if (snapshot.hasError) {
+        //         return Text('error downloading storeis');
+        //       }
+        //       if (snapshot.connectionState == ConnectionState.waiting) {
+        //         return Text('downloading data');
+        //       }
+        //
+        //       final data = snapshot.requireData;
+        //       print ('size: ${data.size}');
+        //       //return Text('Raf ${data.docs[1]['firstname']} a raf ${data.docs[1]['surname']}');
+        //
+        //       return Container(
+        //
+        //         child: Expanded(
+        //
+        //           child: ListView.builder(
+        //             itemCount: data.size,
+        //             itemBuilder: (context, index) {
+        //               return Text('Raf ${data.docs[index]['firstname']} a raf ${data.docs[index]['surname']}');
+        //             },
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
     );
   }
