@@ -8,7 +8,7 @@
 PRODUCT_NAME = barbs_bedtime_stories
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.flutterMusicAppUi
+PRODUCT_BUNDLE_IDENTIFIER = com.rafterco.barbs.bedtime.stories
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 com.example. All rights reserved.

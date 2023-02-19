@@ -1,49 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../models/playlist_model.dart';
 import '../models/song_model.dart';
 import '../widgets/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<Song> songs = Song.songs;
     List<Playlist> playlists = Playlist.playlists;
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.deepPurple.shade800.withOpacity(0.8),
-            Colors.deepPurple.shade200.withOpacity(0.8),
-          ],
-        ),
-      ),
-      child: Scaffold(
+      return Scaffold(
         backgroundColor: Colors.transparent,
         appBar: const _CustomAppBar(),
         bottomNavigationBar: const _CustomNavBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const _DiscoverMusic(),
-              _TrendingMusic(songs: songs),
-              _PlaylistMusic(playlists: playlists),
-            ],
-          ),
-        ),
+
+        body: Stack(children: [
+      SvgPicture.asset(
+      'assets/images/bg_home_border.svg',
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        alignment: AlignmentDirectional.topStart,
       ),
-    );
+      SvgPicture.asset(
+        'assets/images/bg_moon_home.svg',
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        alignment: AlignmentDirectional.topStart,
+      ),
+      Column(children: [
+
+      Expanded(
+        child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const _DiscoverMusic(),
+                _TrendingStories(songs: songs),
+                SizedBox(
+                    height: 200,
+                    child: _PlaylistMusic(playlists: playlists),
+                ),
+              ],
+            ),
+          ),
+      ),
+      ]),
+    ]),);
   }
 }
 
 class _PlaylistMusic extends StatelessWidget {
-  const _PlaylistMusic({
+  _PlaylistMusic({
     Key? key,
     required this.playlists,
   }) : super(key: key);
@@ -52,9 +64,14 @@ class _PlaylistMusic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Stream<QuerySnapshot> users =
+    FirebaseFirestore.instance.collection('users').snapshots();
+    
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
+
+        /*
         children: [
           const SectionHeader(title: 'Recommended Playlists'),
           ListView.builder(
@@ -67,13 +84,50 @@ class _PlaylistMusic extends StatelessWidget {
             }),
           ),
         ],
+         */
+        children: [
+          SectionHeader(title: 'Recommended Playlists'),
+          StreamBuilder<QuerySnapshot>(
+            stream: users,
+            builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot,
+            )
+            {
+
+              if (snapshot.hasError) {
+                return Text('error downloading storeis');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('downloading data');
+              }
+
+              final data = snapshot.requireData;
+              print ('size: ${data.size}');
+              //return Text('Raf ${data.docs[1]['firstname']} a raf ${data.docs[1]['surname']}');
+
+              return Container(
+                
+                child: Expanded(
+                  
+                  child: ListView.builder(
+                    itemCount: data.size,
+                    itemBuilder: (context, index) {
+                      return Text('Raf ${data.docs[index]['firstname']} a raf ${data.docs[index]['surname']}');
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 }
 
-class _TrendingMusic extends StatelessWidget {
-  const _TrendingMusic({
+class _TrendingStories extends StatelessWidget {
+  const _TrendingStories({
     Key? key,
     required this.songs,
   }) : super(key: key);
@@ -96,7 +150,7 @@ class _TrendingMusic extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.27,
+            height: MediaQuery.of(context).size.height * 0.20,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: songs.length,
@@ -123,6 +177,7 @@ class _DiscoverMusic extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 80),
           Text(
             'Welcome Kyla',
             style: Theme.of(context).textTheme.bodyLarge,
@@ -135,24 +190,7 @@ class _DiscoverMusic extends StatelessWidget {
                 .headline6!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 20),
-          TextFormField(
-            decoration: InputDecoration(
-              isDense: true,
-              filled: true,
-              fillColor: Colors.white,
-              hintText: 'Search',
-              hintStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Colors.grey.shade400),
-              prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
+
         ],
       ),
     );

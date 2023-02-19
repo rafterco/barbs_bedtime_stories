@@ -1,73 +1,51 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class Upload extends StatefulWidget {
+  const Upload({Key? key}) : super(key: key);
+
   @override
   _UploadState createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
 
-  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-    nonPersonalizedAds: true,
-  );
-
-  BannerAd _bannerAd1;
-
-  BannerAd createBannerAd() {
-    return BannerAd(
-      adUnitId: 'ca-app-pub-6665765954949461/6038232188',
-      size: AdSize.banner,
-    );
-  }
-
-
   @override
   void initState() {
-    FirebaseAdMob.instance
-        .initialize(appId: 'ca-app-pub-6665765954949461~8831916485');
-    _bannerAd1 = createBannerAd();
     super.initState();
-
-    show_banner_ads1();
-
-  }
-
-  void show_banner_ads1() {
-        _bannerAd1
-      ..load()
-      ..show(
-        anchorOffset: 0.0,
-        anchorType: AnchorType.bottom,
-      );
   }
 
   TextEditingController songname = TextEditingController();
   TextEditingController artistname = TextEditingController();
 
-  File image, song;
-  String imagepath, songpath;
-  Reference ref;
+  late File image, song;
+  late String imagepath, songpath;
+  late Reference ref;
   var image_down_url, song_down_url;
   final firestoreinstance = FirebaseFirestore.instance;
 
   void selectimage() async {
-    image = await FilePicker.getFile();
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      image = File(result.files.single.path.toString());
+    } else {
+      // User canceled the picker
+    }
 
     setState(() {
       image = image;
-      imagepath = basename(image.path);
+      imagepath = image.path;
       uploadimagefile(image.readAsBytesSync(), imagepath);
     });
   }
 
-  Future<String> uploadimagefile(List<int> image, String imagepath) async {
+  uploadimagefile(Uint8List image, String imagepath) async {
     ref = FirebaseStorage.instance.ref().child(imagepath);
     UploadTask uploadTask = ref.putData(image);
 
@@ -75,16 +53,22 @@ class _UploadState extends State<Upload> {
   }
 
   void selectsong() async {
-    song = await FilePicker.getFile();
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      song = File(result.files.single.path.toString());
+    } else {
+      // User canceled the picker
+    }
 
     setState(() {
       song = song;
-      songpath = basename(song.path);
+      songpath = song.path;
       uploadsongfile(song.readAsBytesSync(), songpath);
     });
   }
 
-  Future<String> uploadsongfile(List<int> song, String songpath) async {
+  uploadsongfile(Uint8List song, String songpath) async {
     ref = FirebaseStorage.instance.ref().child(songpath);
     UploadTask uploadTask = ref.putData(song);
 
