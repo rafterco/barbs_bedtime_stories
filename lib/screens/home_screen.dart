@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                     const _DiscoverMusic(),
                     _TrendingStories(songs: songs),
                     SizedBox(
-                      height: 200,
+                      height: 700,
                       child: _PlaylistMusic(playlists: playlists),
                     ),
                   ],
@@ -217,7 +217,7 @@ class _DiscoverMusic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,7 +226,7 @@ class _DiscoverMusic extends StatelessWidget {
             'Welcome Kyla',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 3),
           Text(
             'Enjoy your favorite bedtime stories',
             style: Theme.of(context)
@@ -234,7 +234,6 @@ class _DiscoverMusic extends StatelessWidget {
                 .headline6!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-
         ],
       ),
     );
