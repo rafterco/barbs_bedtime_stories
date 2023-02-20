@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../models/playlist_model.dart';
 import '../models/song_model.dart';
@@ -13,13 +12,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Song> songs = Song.songs;
-    List<Playlist> playlists = [];//Playlist.playlists; //rafraf
-
-      return Scaffold(
-        backgroundColor: Colors.deepPurple.shade600,
-        appBar: const _CustomAppBar(),
-
-        body: Stack(children: [
+    List<Playlist> playlists = [];
+    return Scaffold(
+      backgroundColor: Colors.deepPurple.shade600,
+      appBar: const _CustomAppBar(),
+      body: Stack(
+        children: [
           SvgPicture.asset(
             'assets/images/bg_home_border.svg',
             width: MediaQuery.of(context).size.width,
@@ -48,7 +46,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ]),
-        ],),);
+        ],
+      ),
+    );
   }
 }
 
@@ -63,108 +63,48 @@ class _PlaylistMusic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> users =
-    FirebaseFirestore.instance.collection('users').snapshots();
+        FirebaseFirestore.instance.collection('users').snapshots();
 
     final Stream<QuerySnapshot> firebasePlaylist =
-    FirebaseFirestore.instance.collection('playlist').snapshots();
+        FirebaseFirestore.instance.collection('playlist').snapshots();
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
-
-        /*
         children: [
           const SectionHeader(title: 'Recommended Playlists'),
-          ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 20),
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: playlists.length,
-            itemBuilder: ((context, index) {
-              return PlaylistCard(playlist: playlists[index]);
-            }),
+          StreamBuilder<QuerySnapshot>(
+            stream: firebasePlaylist,
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<QuerySnapshot> snapshot,
+            ) {
+              if (snapshot.hasError) {
+                return const Text('error downloading storeis');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('downloading data');
+              }
+
+              final data = snapshot.requireData;
+              return Container(
+                child: Expanded(
+                  child: ListView.builder(
+                    itemCount: data.size,
+                    itemBuilder: (context, index) {
+                      Playlist pl = Playlist(
+                        title: data.docs[index]['title'],
+                        songs: data.docs[index]['stories'].cast<Song>(),
+                        imageUrl: data.docs[index]['imageUrl'],
+                      );
+                      return PlaylistCard(playlist: pl);
+                    },
+                  ),
+                ),
+              );
+            },
           ),
         ],
-         */
-
-          // firebasePlaylist.forEach((element) {
-          //   List<Song> songs = element.docs[0]['stories'].cast<Song>();
-          //   Playlist playList = Playlist(
-          //       title: element.docs[0]['title'],
-          //       songs: songs,
-          //       imageUrl: element.docs[0]['imageUrl']
-          //   );
-          //   playlists.add(playList);
-          // });
-
-          children: [
-            SectionHeader(title: 'Recommended Playlists'),
-            StreamBuilder<QuerySnapshot>(
-              stream: firebasePlaylist,
-              builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,) {
-                if (snapshot.hasError) {
-                  return Text('error downloading storeis');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('downloading data');
-                }
-
-                final data = snapshot.requireData;
-                return Container(
-                  child: Expanded(
-                    child: ListView.builder(
-                      itemCount: data.size,
-                      itemBuilder: (context, index) {
-                        Playlist pl = Playlist(
-                          title: data.docs[index]['title'],
-                          songs: data.docs[index]['stories'].cast<Song>(),
-                          imageUrl: data.docs[index]['imageUrl'],
-                        );
-                        return PlaylistCard(playlist: pl);
-                        },
-                    ),
-                  ),
-                );},
-            ),
-          ],
-        // children: [
-        //   SectionHeader(title: 'Recommended Playlists'),
-        //   StreamBuilder<QuerySnapshot>(
-        //     stream: users,
-        //     builder: (
-        //         BuildContext context,
-        //         AsyncSnapshot<QuerySnapshot> snapshot,
-        //     )
-        //     {
-        //
-        //       if (snapshot.hasError) {
-        //         return Text('error downloading storeis');
-        //       }
-        //       if (snapshot.connectionState == ConnectionState.waiting) {
-        //         return Text('downloading data');
-        //       }
-        //
-        //       final data = snapshot.requireData;
-        //       print ('size: ${data.size}');
-        //       //return Text('Raf ${data.docs[1]['firstname']} a raf ${data.docs[1]['surname']}');
-        //
-        //       return Container(
-        //
-        //         child: Expanded(
-        //
-        //           child: ListView.builder(
-        //             itemCount: data.size,
-        //             itemBuilder: (context, index) {
-        //               return Text('Raf ${data.docs[index]['firstname']} a raf ${data.docs[index]['surname']}');
-        //             },
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ],
       ),
     );
   }

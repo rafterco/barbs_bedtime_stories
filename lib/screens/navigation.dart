@@ -43,11 +43,26 @@ class _NavigationState extends State<Navigation> {
             activeColor: Colors.white,
             padding: EdgeInsets.all(10),
             tabs: const [
-              GButton(icon: Icons.home, text: 'Home',),
-              GButton(icon: Icons.favorite_border, text: 'Favourites'),
-              GButton(icon: Icons.search, text: 'Search',),
-              GButton(icon: Icons.settings, text: 'Settings',),
-              GButton(icon: Icons.account_circle, text: 'Account',),
+              GButton(
+                icon: Icons.home,
+                text: 'Home',
+              ),
+              GButton(
+                icon: Icons.favorite_border,
+                text: 'Favourites',
+              ),
+              GButton(
+                icon: Icons.search,
+                text: 'Search',
+              ),
+              GButton(
+                icon: Icons.settings,
+                text: 'Settings',
+              ),
+              GButton(
+                icon: Icons.account_circle,
+                text: 'Account',
+              ),
             ],
           ),
         ),

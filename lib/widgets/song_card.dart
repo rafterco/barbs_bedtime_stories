@@ -1,3 +1,4 @@
+import 'package:barbs_bedtime_stories/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,10 @@ class SongCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.toNamed('/song', arguments: song);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SongScreen()),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(right: 10),

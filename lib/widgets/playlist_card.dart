@@ -1,3 +1,4 @@
+import 'package:barbs_bedtime_stories/screens/playlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,10 @@ class PlaylistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.toNamed('/playlist', arguments: playlist);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PlaylistScreen()),
+        );
       },
       child: Container(
         height: 75,
