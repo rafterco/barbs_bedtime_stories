@@ -16,9 +16,8 @@ class HomeScreen extends StatelessWidget {
     List<Playlist> playlists = [];//Playlist.playlists; //rafraf
 
       return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.deepPurple.shade600,
         appBar: const _CustomAppBar(),
-        bottomNavigationBar: const _CustomNavBar(),
 
         body: Stack(children: [
           SvgPicture.asset(
@@ -34,23 +33,22 @@ class HomeScreen extends StatelessWidget {
             alignment: AlignmentDirectional.topStart,
           ),
           Column(children: [
-
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                const _DiscoverMusic(),
-                _TrendingStories(songs: songs),
-                SizedBox(
-                    height: 200,
-                    child: _PlaylistMusic(playlists: playlists),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const _DiscoverMusic(),
+                    _TrendingStories(songs: songs),
+                    SizedBox(
+                      height: 200,
+                      child: _PlaylistMusic(playlists: playlists),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-      ),
-      ]),
-    ],),);
+          ]),
+        ],),);
   }
 }
 
@@ -100,45 +98,37 @@ class _PlaylistMusic extends StatelessWidget {
           // });
 
           children: [
-          SectionHeader(title: 'Recommended Playlists'),
-        StreamBuilder<QuerySnapshot>(
-          stream: firebasePlaylist,
-          builder: (
-              BuildContext context,
-              AsyncSnapshot<QuerySnapshot> snapshot,) {
+            SectionHeader(title: 'Recommended Playlists'),
+            StreamBuilder<QuerySnapshot>(
+              stream: firebasePlaylist,
+              builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot,) {
+                if (snapshot.hasError) {
+                  return Text('error downloading storeis');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('downloading data');
+                }
 
-            if (snapshot.hasError) {
-              return Text('error downloading storeis');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text('downloading data');
-            }
-
-            final data = snapshot.requireData;
-            print ('size: ${data.size}');
-            //return Text('Raf ${data.docs[1]['firstname']} a raf ${data.docs[1]['surname']}');
-
-            return Container(
-              child: Expanded(
-                child: ListView.builder(
-                  itemCount: data.size,
-                  itemBuilder: (context, index) {
-                    Playlist pl = Playlist(
-                        title: data.docs[index]['title'],
-                        songs: data.docs[index]['stories'].cast<Song>(),
-                        imageUrl: data.docs[index]['imageUrl'],
-                    );
-                    return PlaylistCard(playlist: pl);
-                    return Text('Raf ${data.docs[index]['title']} a raf ${data.docs[index]['imageUrl']}');
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-        ],
-
-
+                final data = snapshot.requireData;
+                return Container(
+                  child: Expanded(
+                    child: ListView.builder(
+                      itemCount: data.size,
+                      itemBuilder: (context, index) {
+                        Playlist pl = Playlist(
+                          title: data.docs[index]['title'],
+                          songs: data.docs[index]['stories'].cast<Song>(),
+                          imageUrl: data.docs[index]['imageUrl'],
+                        );
+                        return PlaylistCard(playlist: pl);
+                        },
+                    ),
+                  ),
+                );},
+            ),
+          ],
         // children: [
         //   SectionHeader(title: 'Recommended Playlists'),
         //   StreamBuilder<QuerySnapshot>(
@@ -295,7 +285,7 @@ class _CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       elevation: 0,
       leading: const Icon(Icons.grid_view_rounded),
       actions: [
