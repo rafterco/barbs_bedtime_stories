@@ -7,7 +7,7 @@ import '../widgets/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade600,
-      appBar: const _CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -53,12 +53,12 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _PlaylistMusic extends StatelessWidget {
-  _PlaylistMusic({
+  const _PlaylistMusic({
     Key? key,
     required this.playlists,
   }) : super(key: key);
 
-  List<Playlist> playlists;
+  final List<Playlist> playlists;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class _PlaylistMusic extends StatelessWidget {
               AsyncSnapshot<QuerySnapshot> snapshot,
             ) {
               if (snapshot.hasError) {
-                return const Text('error downloading storeis');
+                return const Text('error downloading Stories');
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text('downloading data');
@@ -86,6 +86,7 @@ class _PlaylistMusic extends StatelessWidget {
               final data = snapshot.requireData;
               return Expanded(
                 child: ListView.builder(
+                  padding: EdgeInsets.zero,
                   itemCount: data.size,
                   itemBuilder: (context, index) {
                     Playlist pl = Playlist(
@@ -199,66 +200,4 @@ class _DiscoverMusic extends StatelessWidget {
   }
 }
 
-class _CustomNavBar extends StatelessWidget {
-  const _CustomNavBar({
-    Key? key,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.deepPurple.shade800,
-      unselectedItemColor: Colors.white,
-      selectedItemColor: Colors.white,
-      showUnselectedLabels: false,
-      showSelectedLabels: false,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_outline),
-          label: 'Favorites',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.play_circle_outline),
-          label: 'Play',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.people_outline),
-          label: 'Profile',
-        ),
-      ],
-    );
-  }
-}
-
-class _CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  const _CustomAppBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.black,
-      elevation: 0,
-      leading: const Icon(Icons.grid_view_rounded),
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 20),
-          child: const CircleAvatar(
-            backgroundImage: NetworkImage(
-              'https://images.unsplash.com/photo-1659025435463-a039676b45a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(56.0);
-}

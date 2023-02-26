@@ -1,3 +1,5 @@
+import 'package:barbs_bedtime_stories/screens/favourites.dart';
+import 'package:barbs_bedtime_stories/screens/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -16,8 +18,8 @@ class _NavigationState extends State<Navigation> {
 
   final List<Widget> screens = [
     HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
+    FavouritesScreen(),
+    SearchScreen(),
     HomeScreen(),
     HomeScreen(),
   ];

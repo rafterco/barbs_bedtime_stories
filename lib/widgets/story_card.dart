@@ -44,7 +44,7 @@ class StoryCard extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withOpacity(0.65),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
