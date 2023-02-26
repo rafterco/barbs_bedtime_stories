@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/playlist_model.dart';
-import '../models/song_model.dart';
+import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -11,8 +11,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Song> songs = Song.songs;
     List<Playlist> playlists = [];
+
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade600,
       appBar: const _CustomAppBar(),
@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const _DiscoverMusic(),
-                    _TrendingStories(songs: songs),
+                    const _TrendingStories(),
                     SizedBox(
                       height: 700,
                       child: _PlaylistMusic(playlists: playlists),
@@ -62,9 +62,6 @@ class _PlaylistMusic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> users =
-        FirebaseFirestore.instance.collection('users').snapshots();
-
     final Stream<QuerySnapshot> firebasePlaylist =
         FirebaseFirestore.instance.collection('playlist').snapshots();
 
@@ -87,19 +84,17 @@ class _PlaylistMusic extends StatelessWidget {
               }
 
               final data = snapshot.requireData;
-              return Container(
-                child: Expanded(
-                  child: ListView.builder(
-                    itemCount: data.size,
-                    itemBuilder: (context, index) {
-                      Playlist pl = Playlist(
-                        title: data.docs[index]['title'],
-                        songs: data.docs[index]['stories'].cast<Song>(),
-                        imageUrl: data.docs[index]['imageUrl'],
-                      );
-                      return PlaylistCard(playlist: pl);
-                    },
-                  ),
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: data.size,
+                  itemBuilder: (context, index) {
+                    Playlist pl = Playlist(
+                      title: data.docs[index]['title'],
+                      songs: data.docs[index]['stories'].cast<Story>(),
+                      imageUrl: data.docs[index]['imageUrl'],
+                    );
+                    return PlaylistCard(playlist: pl);
+                  },
                 ),
               );
             },
@@ -113,13 +108,14 @@ class _PlaylistMusic extends StatelessWidget {
 class _TrendingStories extends StatelessWidget {
   const _TrendingStories({
     Key? key,
-    required this.songs,
   }) : super(key: key);
-
-  final List<Song> songs;
 
   @override
   Widget build(BuildContext context) {
+
+    final Stream<QuerySnapshot> stories =
+    FirebaseFirestore.instance.collection('stories').snapshots();
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 20.0,
@@ -135,11 +131,34 @@ class _TrendingStories extends StatelessWidget {
           const SizedBox(height: 20),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.20,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: songs.length,
-              itemBuilder: (context, index) {
-                return SongCard(song: songs[index]);
+            child: StreamBuilder<QuerySnapshot>(
+              stream: stories,
+              builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot,) {
+                if (snapshot.hasError) {
+                  return const Text('error downloading storeis');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text('downloading data');
+                }
+
+                final data = snapshot.requireData;
+                return Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: data.size,
+
+                    itemBuilder: (context, index) {
+                      Story song = Story(
+                          title: data.docs[index]['title'],
+                          description: data.docs[index]['description'],
+                          url: data.docs[index]['url'],
+                          coverUrl: data.docs[index]['coverUrl']);
+                      return StoryCard(story: song);
+                    },
+                  ),
+                );
               },
             ),
           ),

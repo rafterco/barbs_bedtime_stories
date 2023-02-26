@@ -1,21 +1,23 @@
+import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 
-import '../models/song_model.dart';
+import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 
-class SongScreen extends StatefulWidget {
-  const SongScreen({Key? key}) : super(key: key);
+class StoryScreen extends StatefulWidget {
+  const StoryScreen(this.story, {Key? key}) :
+        super(key: key);
+  final Story story;
 
   @override
-  State<SongScreen> createState() => _SongScreenState();
+  State<StoryScreen> createState() => _StoryScreenState();
 }
 
-class _SongScreenState extends State<SongScreen> {
+class _StoryScreenState extends State<StoryScreen> {
   AudioPlayer audioPlayer = AudioPlayer();
-  Song song = Get.arguments ?? Song.songs[0];
 
   @override
   void initState() {
@@ -25,7 +27,7 @@ class _SongScreenState extends State<SongScreen> {
       ConcatenatingAudioSource(
         children: [
           AudioSource.uri(
-            Uri.parse('asset:///${song.url}'),
+            Uri.parse('asset:///${widget.story.url}'),
           ),
         ],
       ),
@@ -62,12 +64,12 @@ class _SongScreenState extends State<SongScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            song.coverUrl,
+            widget.story.coverUrl,
             fit: BoxFit.cover,
           ),
           const _BackgroundFilter(),
           _MusicPlayer(
-            song: song,
+            story: widget.story,
             seekBarDataStream: _seekBarDataStream,
             audioPlayer: audioPlayer,
           ),
@@ -77,20 +79,29 @@ class _SongScreenState extends State<SongScreen> {
   }
 }
 
-class _MusicPlayer extends StatelessWidget {
-  const _MusicPlayer({
+class _MusicPlayer extends StatefulWidget{
+
+  _MusicPlayer({
     Key? key,
-    required this.song,
+    required this.story,
     required Stream<SeekBarData> seekBarDataStream,
     required this.audioPlayer,
   })  : _seekBarDataStream = seekBarDataStream,
         super(key: key);
 
-  final Song song;
+  final Story story;
   final Stream<SeekBarData> _seekBarDataStream;
   final AudioPlayer audioPlayer;
+  bool favorite = false;
 
+  _MusicPlayerState createState()=> _MusicPlayerState();
+}
+
+class _MusicPlayerState extends State<_MusicPlayer>{
   @override
+  // TODO: implement widget
+  _MusicPlayer get widget => super.widget;
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -102,15 +113,15 @@ class _MusicPlayer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            song.title,
+            widget.story.title,
             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 10),
           Text(
-            song.description,
+            widget.story.description,
             maxLines: 2,
             style: Theme.of(context)
                 .textTheme
@@ -119,32 +130,39 @@ class _MusicPlayer extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           StreamBuilder<SeekBarData>(
-            stream: _seekBarDataStream,
+            stream: widget._seekBarDataStream,
             builder: (context, snapshot) {
               final positionData = snapshot.data;
               return SeekBar(
                 position: positionData?.position ?? Duration.zero,
                 duration: positionData?.duration ?? Duration.zero,
-                onChangeEnd: audioPlayer.seek,
+                onChangeEnd: widget.audioPlayer.seek,
               );
             },
           ),
-          PlayerButtons(audioPlayer: audioPlayer),
+          PlayerButtons(audioPlayer: widget.audioPlayer),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              IconButton(
-                iconSize: 35,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
+              FavoriteButton(
+                isFavorite: widget.favorite,
+                valueChanged: (isFavorite) {
+                  setState(() {
+                    widget.favorite = isFavorite;
+                  });
+                  //todo save to firebase
+
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: widget.favorite ? Text('Added to favourites') : Text('Removed from favourites') ,
+                  ),);
+                },
               ),
               IconButton(
                 iconSize: 35,
-                onPressed: () {},
+                onPressed: () {
+
+                },
                 icon: const Icon(
                   Icons.cloud_download,
                   color: Colors.white,

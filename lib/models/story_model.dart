@@ -1,30 +1,30 @@
-class Song {
+class Story {
   final String title;
   final String description;
   final String url;
   final String coverUrl;
 
-  Song({
+  Story({
     required this.title,
     required this.description,
     required this.url,
     required this.coverUrl,
   });
 
-  static List<Song> songs = [
-    Song(
+  static List<Story> songs = [
+    Story(
       title: 'Glass',
       description: 'Glass',
       url: 'assets/music/glass.mp3',
       coverUrl: 'assets/images/glass.jpg',
     ),
-    Song(
+    Story(
       title: 'Illusions',
       description: 'Illusions',
       url: 'assets/music/illusions.mp3',
       coverUrl: 'assets/images/illusions.jpg',
     ),
-    Song(
+    Story(
       title: 'Pray',
       description: 'Pray',
       url: 'assets/music/pray.mp3',

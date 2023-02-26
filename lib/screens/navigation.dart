@@ -41,7 +41,7 @@ class _NavigationState extends State<Navigation> {
             gap: 8,
             backgroundColor: Colors.black,
             activeColor: Colors.white,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             tabs: const [
               GButton(
                 icon: Icons.home,

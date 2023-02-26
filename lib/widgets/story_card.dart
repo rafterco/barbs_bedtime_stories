@@ -2,15 +2,15 @@ import 'package:barbs_bedtime_stories/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../models/song_model.dart';
+import '../models/story_model.dart';
 
-class SongCard extends StatelessWidget {
-  const SongCard({
+class StoryCard extends StatelessWidget {
+  const StoryCard({
     Key? key,
-    required this.song,
+    required this.story,
   }) : super(key: key);
 
-  final Song song;
+  final Story story;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SongCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SongScreen()),
+          MaterialPageRoute(builder: (context) => StoryScreen(story)),
         );
       },
       child: Container(
@@ -32,7 +32,7 @@ class SongCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
                 image: DecorationImage(
                   image: AssetImage(
-                    song.coverUrl,
+                    story.coverUrl,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -54,14 +54,14 @@ class SongCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        song.title,
+                        story.title,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: Colors.deepPurple,
                               fontWeight: FontWeight.bold,
                             ),
                       ),
                       Text(
-                        song.description,
+                        story.description,
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
