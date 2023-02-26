@@ -49,25 +49,29 @@ class StoryCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        story.title,
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.deepPurple,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      Text(
-                        story.description,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          story.title,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        Text(
+                          story.description,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
                   const Icon(
                     Icons.play_circle,
