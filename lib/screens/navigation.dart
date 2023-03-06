@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-import 'home_screen.dart';
+import '../models/Screens.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({Key? key}) : super(key: key);
@@ -16,18 +16,10 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   int _index = 0;
 
-  final List<Widget> screens = [
-    HomeScreen(),
-    FavouritesScreen(),
-    SearchScreen(),
-    HomeScreen(),
-    HomeScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens.elementAt(_index),
+      body: Screens.screens.elementAt(_index),
       bottomNavigationBar: Container(
         color: Colors.black,
         child: Padding(
