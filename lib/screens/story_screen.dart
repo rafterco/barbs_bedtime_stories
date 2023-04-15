@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 
 import '../models/story_model.dart';
@@ -92,6 +95,7 @@ class _MusicPlayer extends StatefulWidget{
   final Stream<SeekBarData> _seekBarDataStream;
   final AudioPlayer audioPlayer;
   bool favorite = false;
+  bool downloaded = false;
 
   _MusicPlayerState createState()=> _MusicPlayerState();
 }
@@ -162,9 +166,22 @@ class _MusicPlayerState extends State<_MusicPlayer>{
                 onPressed: () {
 
                 },
-                icon: const Icon(
-                  Icons.cloud_download,
-                  color: Colors.white,
+                icon: IconButton(
+                  onPressed: () async {
+                    final dir = await getApplicationDocumentsDirectory();
+                    final file = File('${dir.path}/raf.file');
+
+                    print(dir.path);
+                    print(file);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Downloaded'),)
+                    );
+                  },
+                  icon:  const Icon(
+                    Icons.cloud_download,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],

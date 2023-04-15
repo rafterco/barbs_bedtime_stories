@@ -15,38 +15,40 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade600,
-      appBar: const CustomAppBar(),
-      body: Stack(
-        children: [
-          SvgPicture.asset(
-            'assets/images/bg_home_border.svg',
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            alignment: AlignmentDirectional.topStart,
-          ),
-          SvgPicture.asset(
-            'assets/images/bg_moon_home.svg',
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            alignment: AlignmentDirectional.topStart,
-          ),
-          Column(children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const _DiscoverMusic(),
-                    const _TrendingStories(),
-                    SizedBox(
-                      height: 700,
-                      child: _PlaylistMusic(playlists: playlists),
-                    ),
-                  ],
+      //appBar: const CustomAppBar(),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SvgPicture.asset(
+              'assets/images/bg_home_border.svg',
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              alignment: AlignmentDirectional.topStart,
+            ),
+            SvgPicture.asset(
+              'assets/images/bg_moon_home.svg',
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              alignment: AlignmentDirectional.topStart,
+            ),
+            Column(children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const _DiscoverStories(),
+                      const _TrendingStories(),
+                      SizedBox(
+                        height: 700,
+                        child: _PlaylistMusic(playlists: playlists),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ]),
-        ],
+            ]),
+          ],
+        ),
       ),
     );
   }
@@ -169,8 +171,8 @@ class _TrendingStories extends StatelessWidget {
   }
 }
 
-class _DiscoverMusic extends StatelessWidget {
-  const _DiscoverMusic({
+class _DiscoverStories extends StatelessWidget {
+  const _DiscoverStories({
     Key? key,
   }) : super(key: key);
 
@@ -183,7 +185,7 @@ class _DiscoverMusic extends StatelessWidget {
         children: [
           const SizedBox(height: 80),
           Text(
-            'Welcome Kyla',
+            'Welcome',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 3),

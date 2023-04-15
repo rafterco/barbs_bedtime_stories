@@ -31,44 +31,46 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.deepPurple.shade600,
-        appBar: const CustomAppBar(),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const SectionHeader(title: 'Search online library'),
-              SizedBox(height: 18,),
-              StreamBuilder<QuerySnapshot>(
-                stream: firebasePlaylist,
-                builder: (
-                    BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot,
-                    ) {
-                  if (snapshot.hasError) {
-                    return const Text('error downloading Stories');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text('downloading data');
-                  }
+        //appBar: const CustomAppBar(),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                const SectionHeader(title: 'Search online library'),
+                SizedBox(height: 18,),
+                StreamBuilder<QuerySnapshot>(
+                  stream: firebasePlaylist,
+                  builder: (
+                      BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot,
+                      ) {
+                    if (snapshot.hasError) {
+                      return const Text('error downloading Stories');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text('downloading data');
+                    }
 
-                  final data = snapshot.requireData;
-                  return Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: data.size,
-                      itemBuilder: (context, index) {
-                        Playlist pl = Playlist(
-                          title: data.docs[index]['title'],
-                          songs: data.docs[index]['stories'].cast<Story>(),
-                          imageUrl: data.docs[index]['imageUrl'],
-                        );
-                        return PlaylistCard(playlist: pl);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
+                    final data = snapshot.requireData;
+                    return Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: data.size,
+                        itemBuilder: (context, index) {
+                          Playlist pl = Playlist(
+                            title: data.docs[index]['title'],
+                            songs: data.docs[index]['stories'].cast<Story>(),
+                            imageUrl: data.docs[index]['imageUrl'],
+                          );
+                          return PlaylistCard(playlist: pl);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

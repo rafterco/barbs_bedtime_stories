@@ -11,6 +11,7 @@ class PlayerButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool active = false;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -21,9 +22,12 @@ class PlayerButtons extends StatelessWidget {
               onPressed:
                   audioPlayer.hasPrevious ? audioPlayer.seekToPrevious : null,
               iconSize: 45,
-              icon: const Icon(
-                Icons.skip_previous,
-                color: Colors.white,
+              icon: Opacity(
+                opacity: active ? 1 : 0,
+                child: const Icon(
+                  Icons.skip_previous,
+                  color: Colors.white,
+                ),
               ),
             );
           },
@@ -85,9 +89,12 @@ class PlayerButtons extends StatelessWidget {
             return IconButton(
               onPressed: audioPlayer.hasNext ? audioPlayer.seekToNext : null,
               iconSize: 45,
-              icon: const Icon(
-                Icons.skip_next,
-                color: Colors.white,
+              icon: Opacity(
+                opacity: active ? 1 : 0,
+                child: const Icon(
+                  Icons.skip_next,
+                  color: Colors.white,
+                ),
               ),
             );
           },

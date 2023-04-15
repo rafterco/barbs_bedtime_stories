@@ -49,14 +49,14 @@ class _NavigationState extends State<Navigation> {
                 icon: Icons.search,
                 text: 'Search',
               ),
-              GButton(
+            /*  GButton(
                 icon: Icons.settings,
                 text: 'Settings',
               ),
               GButton(
                 icon: Icons.account_circle,
                 text: 'Account',
-              ),
+              ),*/
             ],
           ),
         ),
