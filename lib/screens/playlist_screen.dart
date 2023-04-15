@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import '../models/playlist_model.dart';
 
 class PlaylistScreen extends StatelessWidget {
-  const PlaylistScreen({Key? key}) : super(key: key);
+  PlaylistScreen({
+    Key? key,
+    required this.playlist,
+  }) : super(key: key);
+
+  final Playlist playlist;
 
   @override
   Widget build(BuildContext context) {
-    Playlist playlist = Playlist.playlists[0];
 
     return Container(
       decoration: BoxDecoration(
@@ -58,7 +62,7 @@ class _PlaylistSongs extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: playlist.songs.length,
+      itemCount: playlist.stories.length,
       itemBuilder: (context, index) {
         return ListTile(
           leading: Text(
@@ -69,13 +73,14 @@ class _PlaylistSongs extends StatelessWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           title: Text(
-            playlist.songs[index].title,
+            playlist.title,
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-          subtitle: Text('${playlist.songs[index].description} ⚬ 02:45'),
+          subtitle: Text('subtitle goes here'),
+          //todo subtitle: Text('${playlist.stories[index].description} ⚬ 02:45'),
           trailing: const Icon(
             Icons.more_vert,
             color: Colors.white,
@@ -104,6 +109,7 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
 
     return GestureDetector(
       onTap: () {
+        print('raf');
         setState(() {
           isPlay = !isPlay;
         });

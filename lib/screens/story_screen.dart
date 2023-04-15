@@ -162,11 +162,6 @@ class _MusicPlayerState extends State<_MusicPlayer>{
                 },
               ),
               IconButton(
-                iconSize: 35,
-                onPressed: () {
-
-                },
-                icon: IconButton(
                   onPressed: () async {
                     final dir = await getApplicationDocumentsDirectory();
                     final file = File('${dir.path}/raf.file');
@@ -183,7 +178,6 @@ class _MusicPlayerState extends State<_MusicPlayer>{
                     color: Colors.white,
                   ),
                 ),
-              ),
             ],
           ),
         ],

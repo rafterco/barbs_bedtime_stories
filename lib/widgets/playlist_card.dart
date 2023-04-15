@@ -1,6 +1,5 @@
 import 'package:barbs_bedtime_stories/screens/playlist_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../models/playlist_model.dart';
 
@@ -14,11 +13,12 @@ class PlaylistCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const PlaylistScreen()),
+          MaterialPageRoute(builder: (context) => PlaylistScreen(playlist: playlist,)),
         );
       },
       child: Container(
@@ -55,7 +55,7 @@ class PlaylistCard extends StatelessWidget {
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${playlist.songs.length} songs',
+                    '${playlist.stories.length} songs',
                     maxLines: 2,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -63,7 +63,12 @@ class PlaylistCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PlaylistScreen(playlist: playlist,)),
+                );
+              },
               icon: const Icon(
                 Icons.play_circle,
                 color: Colors.white,

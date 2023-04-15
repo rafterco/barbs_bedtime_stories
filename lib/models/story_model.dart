@@ -15,7 +15,7 @@ class Story {
   });
 
 
-  static List<Story> songs = [
+  static List<Story> stories = [
     Story(
       title: 'Glass',
       description: 'Glass',

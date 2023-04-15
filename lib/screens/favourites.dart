@@ -82,7 +82,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                       itemBuilder: (context, index) {
                         Playlist pl = Playlist(
                           title: data.docs[index]['title'],
-                          songs: data.docs[index]['stories'].cast<Story>(),
+                          stories: data.docs[index]['stories'].cast<String>(),
                           imageUrl: data.docs[index]['imageUrl'],
                         );
                         return PlaylistCard(playlist: pl);

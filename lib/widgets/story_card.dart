@@ -15,12 +15,6 @@ class StoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => StoryScreen(story)),
-        );
-      },
       child: Container(
         margin: const EdgeInsets.only(right: 10),
         child: Stack(
@@ -83,6 +77,12 @@ class StoryCard extends StatelessWidget {
           ],
         ),
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StoryScreen(story)),
+        );
+      },
     );
   }
 }

@@ -60,7 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         itemBuilder: (context, index) {
                           Playlist pl = Playlist(
                             title: data.docs[index]['title'],
-                            songs: data.docs[index]['stories'].cast<Story>(),
+                            stories: data.docs[index]['stories'].cast<Story>(),
                             imageUrl: data.docs[index]['imageUrl'],
                           );
                           return PlaylistCard(playlist: pl);

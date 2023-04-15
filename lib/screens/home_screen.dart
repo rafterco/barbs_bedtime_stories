@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                       const _TrendingStories(),
                       SizedBox(
                         height: 700,
-                        child: _PlaylistMusic(playlists: playlists),
+                        child: _PlaylistStories(playlists: playlists),
                       ),
                     ],
                   ),
@@ -54,8 +54,8 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _PlaylistMusic extends StatelessWidget {
-  const _PlaylistMusic({
+class _PlaylistStories extends StatelessWidget {
+  const _PlaylistStories({
     Key? key,
     required this.playlists,
   }) : super(key: key);
@@ -93,7 +93,7 @@ class _PlaylistMusic extends StatelessWidget {
                   itemBuilder: (context, index) {
                     Playlist pl = Playlist(
                       title: data.docs[index]['title'],
-                      songs: data.docs[index]['stories'].cast<Story>(),
+                      stories: data.docs[index]['stories'].cast<String>(),
                       imageUrl: data.docs[index]['imageUrl'],
                     );
                     return PlaylistCard(playlist: pl);
