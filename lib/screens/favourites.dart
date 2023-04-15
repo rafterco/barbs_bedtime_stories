@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +18,38 @@ class FavouritesScreen extends StatefulWidget {
   State<FavouritesScreen> createState() => _FavouritesScreenState();
 }
 
+uploadImagetFirebase(String imagePath) async {
+  await FirebaseStorage.instance
+      .ref(imagePath)
+      .putFile(File(imagePath))
+      .then((taskSnapshot) {
+    print("task done");
+
+// download url when it is uploaded
+    if (taskSnapshot.state == TaskState.success) {
+      FirebaseStorage.instance
+          .ref(imagePath)
+          .getDownloadURL()
+          .then((url) {
+        print("Here is the URL of Image $url");
+        return url;
+      }).catchError((onError) {
+        print("Got Error $onError");
+      });
+    } else {
+      print('feck');
+    }
+  });
+  print('bugga');
+}
+
 class _FavouritesScreenState extends State<FavouritesScreen> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> firebasePlaylist =
     FirebaseFirestore.instance.collection('playlist').snapshots();
+
+    uploadImagetFirebase('/Users/colinrafter/StudioProjects/barbs_bedtime_stories/assets/music/pray.mp3');
 
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade600,

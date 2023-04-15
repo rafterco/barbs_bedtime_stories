@@ -1,8 +1,11 @@
+import 'package:barbs_bedtime_stories/models/firebase_image.dart';
+
 class Story {
   final String title;
   final String description;
   final String url;
   final String coverUrl;
+  final FirebaseImage firebaseImage = new FirebaseImage(storagePath: 'stories');
 
   Story({
     required this.title,
@@ -10,6 +13,7 @@ class Story {
     required this.url,
     required this.coverUrl,
   });
+
 
   static List<Story> songs = [
     Story(
