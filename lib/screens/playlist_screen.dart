@@ -1,6 +1,10 @@
+import 'package:barbs_bedtime_stories/widgets/story_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/playlist_model.dart';
+import '../models/story_model.dart';
+import '../widgets/playlist_card.dart';
 
 class PlaylistScreen extends StatelessWidget {
   PlaylistScreen({
@@ -39,7 +43,7 @@ class PlaylistScreen extends StatelessWidget {
                 _PlaylistInformation(playlist: playlist),
                 const SizedBox(height: 30),
                 const _PlayOrShuffleSwitch(),
-                _PlaylistSongs(playlist: playlist),
+                _PlaylistStories(playlist: playlist),
               ],
             ),
           ),
@@ -49,8 +53,8 @@ class PlaylistScreen extends StatelessWidget {
   }
 }
 
-class _PlaylistSongs extends StatelessWidget {
-  const _PlaylistSongs({
+class _PlaylistStories extends StatelessWidget {
+  const _PlaylistStories({
     Key? key,
     required this.playlist,
   }) : super(key: key);
@@ -59,34 +63,52 @@ class _PlaylistSongs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: playlist.stories.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: Text(
-            '${index + 1}',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontWeight: FontWeight.bold),
+
+    final Stream<QuerySnapshot> storiesStream =
+    FirebaseFirestore.instance.collection('stories').snapshots();
+    
+
+    return SizedBox(
+      height: 280,
+      child: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+                stream: storiesStream,
+                builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('error downloading Stories');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text('downloading data');
+                  }
+
+                  final data = snapshot.requireData;
+
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: data.size,
+                      itemBuilder: (context, index) {
+                        print('raf $index');
+                        Story s = Story(
+                          title: data.docs[index]['title'],
+                          description: data.docs[index]['description'],
+                          url: data.docs[index]['url'],
+                          coverUrl: data.docs[index]['coverUrl'],
+                        );
+
+                        return StoryCard(story: s);
+                      },
+                    ),
+                  );
+                },
+            ),
           ),
-          title: Text(
-            playlist.title,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text('subtitle goes here'),
-          //todo subtitle: Text('${playlist.stories[index].description} ⚬ 02:45'),
-          trailing: const Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

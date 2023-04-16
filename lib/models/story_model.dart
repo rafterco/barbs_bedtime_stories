@@ -1,11 +1,12 @@
 import 'package:barbs_bedtime_stories/models/firebase_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Story {
   final String title;
   final String description;
   final String url;
   final String coverUrl;
-  final FirebaseImage firebaseImage = new FirebaseImage(storagePath: 'stories');
+  final FirebaseImage firebaseImage = FirebaseImage(storagePath: 'stories');
 
   Story({
     required this.title,
@@ -14,8 +15,7 @@ class Story {
     required this.coverUrl,
   });
 
-
-  static List<Story> stories = [
+/*static List<Story> stories = [
     Story(
       title: 'Glass',
       description: 'Glass',
@@ -34,5 +34,5 @@ class Story {
       url: 'assets/music/pray.mp3',
       coverUrl: 'assets/images/pray.jpg',
     )
-  ];
+  ];*/
 }
