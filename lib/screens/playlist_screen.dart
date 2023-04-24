@@ -16,7 +16,6 @@ class PlaylistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -33,7 +32,7 @@ class PlaylistScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: const Text('Playlist'),
+          title: const Text('Recommended Playlist'),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -63,10 +62,12 @@ class _PlaylistStories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final Stream<QuerySnapshot> storiesStream =
-    FirebaseFirestore.instance.collection('stories').snapshots();
-    
+        FirebaseFirestore.instance.collection('stories').snapshots();
+
+    for (var i = 0; i < playlist.stories.length; i++) {
+      print(playlist.stories[i]);
+    }
 
     return SizedBox(
       height: 280,
@@ -74,37 +75,59 @@ class _PlaylistStories extends StatelessWidget {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-                stream: storiesStream,
-                builder: (
-                BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('error downloading Stories');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text('downloading data');
-                  }
+              stream: storiesStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('error downloading Stories');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text('downloading data');
+                }
 
-                  final data = snapshot.requireData;
+                final data = snapshot.requireData;
 
-                  return Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: data.size,
-                      itemBuilder: (context, index) {
-                        print('raf $index');
-                        Story s = Story(
-                          title: data.docs[index]['title'],
-                          description: data.docs[index]['description'],
-                          url: data.docs[index]['url'],
-                          coverUrl: data.docs[index]['coverUrl'],
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: data.size,
+                    itemBuilder: (context, index) {
+                      print('index $index');
+                      print(data.docs[index]['title']);
+                      //playlist.stories is the stuff I care about
+                      //data is everything from the db
+                      if (playlist.stories.contains(data.docs[index]['title'])) {
+                        print('hit');
+                      }
+
+                      if (playlist.stories.contains(data.docs[index]['title'])) {
+                        return ListTile(
+                          leading: Text(
+                            '${index + 1}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          title: Text(
+                            data.docs[index]['title'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(data.docs[index]['description']),
+                          trailing: const Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                          ),
                         );
-
-                        return StoryCard(story: s);
-                      },
-                    ),
-                  );
-                },
+                      }
+                    },
+                  ),
+                );
+              },
             ),
           ),
         ],

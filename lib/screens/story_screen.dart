@@ -25,6 +25,16 @@ class _StoryScreenState extends State<StoryScreen> {
   void initState() {
     super.initState();
 
+    final items = [
+      AudioSource.uri(Uri.parse('https://example.com/track1.mp3')),
+      AudioSource.uri(Uri.parse('https://example.com/track2.mp3')),
+      AudioSource.uri(Uri.parse('https://example.com/track3.mp3')),
+    ];
+
+    //https://stackoverflow.com/questions/73339177/flutter-with-just-audio-is-it-possible-to-create-a-playlist-that-doesnt-aut/73342727#73342727
+
+    audioPlayer.setAudioSource(items[0]);
+
     audioPlayer.setAudioSource(
       ConcatenatingAudioSource(
         children: [
