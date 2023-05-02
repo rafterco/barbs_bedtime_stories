@@ -63,77 +63,80 @@ class _PlaylistStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> storiesStream =
-        FirebaseFirestore.instance.collection('stories').snapshots();
+    FirebaseFirestore.instance.collection('stories').snapshots();
 
+    print('The stories I need to display');
     for (var i = 0; i < playlist.stories.length; i++) {
       print(playlist.stories[i]);
     }
+    print('\n');
 
     return SizedBox(
       height: 280,
       child: Column(
         children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: storiesStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('error downloading Stories');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text('downloading data');
-                }
+          StreamBuilder<QuerySnapshot>(
+            stream: storiesStream,
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const Text('error downloading Stories');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('downloading data');
+              }
 
-                final data = snapshot.requireData;
+              final data = snapshot.requireData;
 
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: data.size,
-                    itemBuilder: (context, index) {
-                      print('index $index');
-                      print(data.docs[index]['title']);
-                      //playlist.stories is the stuff I care about
-                      //data is everything from the db
-                      if (playlist.stories.contains(data.docs[index]['title'])) {
-                        print('hit');
-                      }
+              return Expanded(
+                child: ListView.builder(
+                  //shrinkWrap: true,
+                  //physics: const NeverScrollableScrollPhysics(),
+                  itemCount: data.size,
+                  itemBuilder: (context, index) {
+                    String story = data.docs[index]['title'];
+                    print('the story I have  $story');
 
-                      if (playlist.stories.contains(data.docs[index]['title'])) {
-                        return ListTile(
-                          leading: Text(
-                            '${index + 1}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(fontWeight: FontWeight.bold),
+                    if (playlist.stories.contains(story)) {
+                      return ListTile(
+                        leading: Text(
+                          '${index + 1}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        title: Text(
+                          data.docs[index]['title'],
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(data.docs[index]['description']),
+                        trailing: IconButton(
+                          icon: const Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
                           ),
-                          title: Text(
-                            data.docs[index]['title'],
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(data.docs[index]['description']),
-                          trailing: const Icon(
-                            Icons.more_vert,
-                            color: Colors.white,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                );
-              },
-            ),
+                          // the method which is called
+                          // when button is pressed
+                          onPressed: () {
+                            print('pressed');
+                          },
+                        ),
+                      );
+                    }
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
     );
   }
+
 }
 
 class _PlayOrShuffleSwitch extends StatefulWidget {
@@ -182,47 +185,43 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          'Play',
-                          style: TextStyle(
-                            color: isPlay ? Colors.white : Colors.deepPurple,
-                            fontSize: 17,
-                          ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Play',
+                        style: TextStyle(
+                          color: isPlay ? Colors.white : Colors.deepPurple,
+                          fontSize: 17,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Icon(
-                        Icons.play_circle,
-                        color: isPlay ? Colors.white : Colors.deepPurple,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 10),
+                    Icon(
+                      Icons.play_circle,
+                      color: isPlay ? Colors.white : Colors.deepPurple,
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          'Shuffle',
-                          style: TextStyle(
-                            color: isPlay ? Colors.deepPurple : Colors.white,
-                            fontSize: 17,
-                          ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Shuffle',
+                        style: TextStyle(
+                          color: isPlay ? Colors.deepPurple : Colors.white,
+                          fontSize: 17,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Icon(
-                        Icons.shuffle,
-                        color: isPlay ? Colors.deepPurple : Colors.white,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 10),
+                    Icon(
+                      Icons.shuffle,
+                      color: isPlay ? Colors.deepPurple : Colors.white,
+                    ),
+                  ],
                 ),
               ],
             ),

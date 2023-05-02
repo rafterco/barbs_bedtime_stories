@@ -147,20 +147,18 @@ class _TrendingStories extends StatelessWidget {
                 }
 
                 final data = snapshot.requireData;
-                return Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: data.size,
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.size,
 
-                    itemBuilder: (context, index) {
-                      Story song = Story(
-                          title: data.docs[index]['title'],
-                          description: data.docs[index]['description'],
-                          url: data.docs[index]['url'],
-                          coverUrl: data.docs[index]['coverUrl']);
-                      return StoryCard(story: song);
-                    },
-                  ),
+                  itemBuilder: (context, index) {
+                    Story song = Story(
+                        title: data.docs[index]['title'],
+                        description: data.docs[index]['description'],
+                        url: data.docs[index]['url'],
+                        coverUrl: data.docs[index]['coverUrl']);
+                    return Expanded(child: StoryCard(story: song));
+                  },
                 );
               },
             ),
