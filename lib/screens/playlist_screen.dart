@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/playlist_model.dart';
-import '../models/story_model.dart';
-import '../widgets/playlist_card.dart';
 
 class PlaylistScreen extends StatelessWidget {
   PlaylistScreen({
@@ -88,6 +86,13 @@ class _PlaylistStories extends StatelessWidget {
 
               final data = snapshot.requireData;
 
+              bool isShuffle = true;
+              if (isShuffle) {
+                bool isShuffle = false;
+                //build the listTiles here
+                playlist.stories.shuffle();
+
+              }
               return Expanded(
                 child: ListView.builder(
                   //shrinkWrap: true,
@@ -114,17 +119,17 @@ class _PlaylistStories extends StatelessWidget {
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(data.docs[index]['description']),
-                        trailing: IconButton(
-                          icon: const Icon(
-                              Icons.more_vert,
-                              color: Colors.white,
-                          ),
-                          // the method which is called
-                          // when button is pressed
-                          onPressed: () {
-                            print('pressed');
-                          },
-                        ),
+                        // trailing: IconButton(
+                        //   icon: const Icon(
+                        //       Icons.more_vert,
+                        //       color: Colors.white,
+                        //   ),
+                        //   // the method which is called
+                        //   // when button is pressed
+                        //   onPressed: () {
+                        //     print('pressed');
+                        //   },
+                        // ),
                       );
                     }
                   },
