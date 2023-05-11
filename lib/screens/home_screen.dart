@@ -140,7 +140,7 @@ class _TrendingStories extends StatelessWidget {
                   BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot,) {
                 if (snapshot.hasError) {
-                  return const Text('error downloading storeis');
+                  return const Text('error downloading stories');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text('downloading data');
