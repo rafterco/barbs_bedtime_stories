@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/playlist_model.dart';
-import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -13,21 +12,19 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Playlist> playlists = [];
+  List<Playlist> allPlaylists = [];
+  List<Playlist> displayPlaylists = [];
 
+  late Future<List<Playlist>> _future;
 
   @override
   void initState() {
     super.initState();
+    _future = populatePlaylistFromFirebase();
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller = TextEditingController();
-
-    final Stream<QuerySnapshot> firebasePlaylist =
-        FirebaseFirestore.instance.collection('playlist').snapshots();
-
 
     return Container(
       decoration: const BoxDecoration(
@@ -54,7 +51,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: TextField(
                       //controller: controller,
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search, color: Colors.white,),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
                         hintText: 'title',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -62,71 +62,26 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       onChanged: searchPlaylists,
                     )),
-                FutureBuilder(
-                    future: getData(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
-                      } else {
-                        return Expanded(
-                          child: ListView.builder(
-                            itemCount: snapshot.data.length,
+                Expanded(
+                  child: FutureBuilder(
+                      future: _future,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Colors.amber),
+                          ));
+                        } else {
+                          return ListView.builder(
+                            itemCount: displayPlaylists.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var title = snapshot.data[index]['title'];
-                              var stories = List<String>.from(snapshot.data[index]['stories']);
-                              var imageUrl = snapshot.data[index]['imageUrl'];
-                              Playlist playlist = Playlist(
-                                  title: title,
-                                  stories: stories,
-                                  imageUrl: imageUrl);
-
-                              //final playlist = playlists[index];
+                              final playlist = displayPlaylists[index];
                               return PlaylistCard(playlist: playlist);
                             },
-                          ),
-                        );
-                      }
-                    }),
-                /*Expanded(
-                  child: ListView.builder(
-                    itemCount: playlists.length,
-                    itemBuilder: (context, index) {
-                      final playlist = playlists[index];
-                      return PlaylistCard(playlist: playlist);
-                    },
-                  ),
-                ),*/
-
-                /* StreamBuilder<QuerySnapshot>(
-                  stream: firebasePlaylist,
-                  builder: (
-                      BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot,
-                      ) {
-                    if (snapshot.hasError) {
-                      return const Text('error downloading Stories');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text('downloading data');
-                    }
-
-                    final data = snapshot.requireData;
-                    return Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: data.size,
-                        itemBuilder: (context, index) {
-                          Playlist pl = Playlist(
-                            title: data.docs[index]['title'],
-                            stories: data.docs[index]['stories'].cast<String>(),
-                            imageUrl: data.docs[index]['imageUrl'],
                           );
-                          return PlaylistCard(playlist: pl);
-                        },
-                      ),
-                    );
-                  },
-                ),*/
+                        }
+                      }),
+                ),
               ],
             ),
           ),
@@ -155,21 +110,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
         Playlist playlist =
             Playlist(title: title, stories: stories, imageUrl: imageUrl);
-        playlists.add(playlist);
+        allPlaylists.add(playlist);
       }
     });
+    displayPlaylists = allPlaylists;
 
-    return playlists;
+    return allPlaylists;
   }
 
   void searchPlaylists(String query) {
-    final suggestions = playlists.where((story) {
+    final suggestions = allPlaylists.where((story) {
       final playlistTitle = story.title.toLowerCase();
       final input = query.toLowerCase();
 
       return playlistTitle.contains(input);
     }).toList();
 
-    setState(() => playlists = suggestions);
+    setState(() => displayPlaylists  = suggestions);
   }
 }
