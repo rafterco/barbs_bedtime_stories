@@ -30,7 +30,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   List<bool> _selected = <bool>[true, false];
 
-
   bool isPlaylist = true;
 
   @override
@@ -61,7 +60,9 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               children: [
                 const SectionHeader(title: 'Search library'),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 ToggleButtons(
                   direction: Axis.horizontal,
                   onPressed: (int index) {
@@ -144,8 +145,8 @@ class _SearchScreenState extends State<SearchScreen> {
             if (!snapshot.hasData) {
               return const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Colors.amber),
-                  ));
+                valueColor: AlwaysStoppedAnimation(Colors.amber),
+              ));
             } else {
               return ListView.builder(
                 itemCount: displayStories.length,
@@ -198,7 +199,11 @@ class _SearchScreenState extends State<SearchScreen> {
         var title = doc.get('title');
         var url = doc.get('url');
 
-        Story story = Story(title: title, description: description, url: url, coverUrl: coverUrl);
+        Story story = Story(
+            title: title,
+            description: description,
+            url: url,
+            coverUrl: coverUrl);
         allStories.add(story);
       }
     });

@@ -137,6 +137,13 @@ class _PlayOrShuffleSwitch extends StatefulWidget {
 class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
   bool isPlay = true;
 
+  List<Widget> fruits = <Widget>[
+    const Text('Play'),
+    const Text('Shuffle')
+  ];
+
+  List<bool> _selected = <bool>[true, false];
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -150,66 +157,38 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
       child: Container(
         height: 50,
         width: width,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
+
         child: Stack(
           children: [
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 200),
-              left: isPlay ? 0 : width * 0.45,
-              child: Container(
-                height: 50,
-                width: width * 0.45,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple.shade400,
-                  borderRadius: BorderRadius.circular(15),
+            Center(
+              child: ToggleButtons(
+                direction: Axis.horizontal,
+                onPressed: (int index) {
+                  setState(() {
+                    // The button that is tapped is set to true, and the others to false.
+                    for (int i = 0; i < _selected.length; i++) {
+                      _selected[i] = i == index;
+                      //isPlaylist = _selected[0] == true;
+                    }
+                  });
+                },
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                //Colors.deepPurple.shade600,
+                selectedBorderColor: Colors.black,
+                selectedColor: Colors.white,
+                fillColor: Colors.deepPurple.shade800,
+                color: Colors.white38,
+                textStyle: TextStyle(fontWeight: FontWeight.bold),
+                constraints: const BoxConstraints(
+                  minHeight: 40.0,
+                  minWidth: 80.0,
                 ),
+                isSelected: _selected,
+                children: fruits,
               ),
             ),
-            Row(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Play',
-                        style: TextStyle(
-                          color: isPlay ? Colors.white : Colors.deepPurple,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Icon(
-                      Icons.play_circle,
-                      color: isPlay ? Colors.white : Colors.deepPurple,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Shuffle',
-                        style: TextStyle(
-                          color: isPlay ? Colors.deepPurple : Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Icon(
-                      Icons.shuffle,
-                      color: isPlay ? Colors.deepPurple : Colors.white,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+
+
           ],
         ),
       ),

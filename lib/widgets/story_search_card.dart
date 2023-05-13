@@ -21,7 +21,7 @@ class StorySearchCard extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.fromLTRB(20, 5, 0, 5),
         height: 75,
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
@@ -43,9 +43,10 @@ class StorySearchCard extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(width: 10,),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 15, 0, 5),
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                 child: Column(
                   children: [
                     ClipRRect(

@@ -60,7 +60,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
           child: Column(
             children: [
               const SectionHeader(title: 'Favourites'),
-              SizedBox(height: 18,),
+              SizedBox(height: 30,),
               StreamBuilder<QuerySnapshot>(
                 stream: firebasePlaylist,
                 builder: (
