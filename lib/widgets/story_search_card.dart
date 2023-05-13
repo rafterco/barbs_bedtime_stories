@@ -1,6 +1,7 @@
 import 'package:barbs_bedtime_stories/widgets/story_card.dart';
 import 'package:flutter/material.dart';
 import '../models/story_model.dart';
+import '../screens/story_screen.dart';
 
 class StorySearchCard extends StatelessWidget {
   const StorySearchCard({
@@ -12,18 +13,17 @@ class StorySearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StoryCard(story: story),),
+          MaterialPageRoute(builder: (context) => StoryScreen(story)),
         );
       },
       child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         height: 75,
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 0),
         decoration: BoxDecoration(
           color: Colors.deepPurple.shade800.withOpacity(0.6),
           borderRadius: BorderRadius.circular(15.0),
@@ -43,22 +43,37 @@ class StorySearchCard extends StatelessWidget {
                 ),
               ),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: Text(
-                story.title,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(fontWeight: FontWeight.bold),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(5, 15, 0, 5),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Text(
+                        story.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(story.description,
+                        overflow: TextOverflow.fade,
+                        style: Theme.of(context).textTheme.bodyMedium!),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(width: 10),
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StorySearchCard(story: story,)),
+                  MaterialPageRoute(
+                      builder: (context) => StorySearchCard(
+                            story: story,
+                          )),
                 );
               },
               icon: const Icon(

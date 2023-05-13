@@ -1,4 +1,3 @@
-import 'package:barbs_bedtime_stories/widgets/story_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -63,12 +62,6 @@ class _PlaylistStories extends StatelessWidget {
     final Stream<QuerySnapshot> storiesStream =
     FirebaseFirestore.instance.collection('stories').snapshots();
 
-    print('The stories I need to display');
-    for (var i = 0; i < playlist.stories.length; i++) {
-      print(playlist.stories[i]);
-    }
-    print('\n');
-
     return SizedBox(
       height: 280,
       child: Column(
@@ -100,7 +93,6 @@ class _PlaylistStories extends StatelessWidget {
                   itemCount: data.size,
                   itemBuilder: (context, index) {
                     String story = data.docs[index]['title'];
-                    print('the story I have  $story');
 
                     if (playlist.stories.contains(story)) {
                       return ListTile(
@@ -119,17 +111,6 @@ class _PlaylistStories extends StatelessWidget {
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(data.docs[index]['description']),
-                        // trailing: IconButton(
-                        //   icon: const Icon(
-                        //       Icons.more_vert,
-                        //       color: Colors.white,
-                        //   ),
-                        //   // the method which is called
-                        //   // when button is pressed
-                        //   onPressed: () {
-                        //     print('pressed');
-                        //   },
-                        // ),
                       );
                     }
                   },
@@ -162,7 +143,6 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
 
     return GestureDetector(
       onTap: () {
-        print('raf');
         setState(() {
           isPlay = !isPlay;
         });
