@@ -1,4 +1,6 @@
+import 'package:barbs_bedtime_stories/models/story_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'notifier/play_button_notifier.dart';
@@ -17,14 +19,15 @@ class PageManager {
 
   late AudioPlayer _audioPlayer;
   late ConcatenatingAudioSource _playlist;
+  late List<UriAudioSource> stories;
 
-  PageManager() {
+  PageManager(this.stories) {
     _init();
   }
 
   void _init() async {
     _audioPlayer = AudioPlayer();
-    _setInitialPlaylist();
+    setInitialPlaylist(stories);
     _listenForChangesInPlayerState();
     _listenForChangesInPlayerPosition();
     _listenForChangesInBufferedPosition();
@@ -32,17 +35,30 @@ class PageManager {
     _listenForChangesInSequenceState();
   }
 
-  void _setInitialPlaylist() async {
-    const prefix = 'https://www.soundhelix.com/examples/mp3';
-    final song1 = Uri.parse('$prefix/SoundHelix-Song-1.mp3');
-    final song2 = Uri.parse('$prefix/SoundHelix-Song-2.mp3');
-    final song3 = Uri.parse('$prefix/SoundHelix-Song-3.mp3');
-    _playlist = ConcatenatingAudioSource(children: [
-      AudioSource.uri(song1, tag: 'Song 1'),
-      AudioSource.uri(song2, tag: 'Song 2'),
-      AudioSource.uri(song3, tag: 'Song 3'),
-    ]);
-    await _audioPlayer.setAudioSource(_playlist);
+  void setInitialPlaylist(List<UriAudioSource> audioSources) async {
+    final concatenatingAudioSource = ConcatenatingAudioSource(children: []);
+
+    Uri audioAssetPath;
+    for (var item in audioSources) {
+      audioAssetPath = item.uri;
+
+      final audioSource1 = AudioSource.uri(
+        Uri.parse('asset:///$audioAssetPath'),
+        tag: 'edward rafta',
+      );
+      concatenatingAudioSource.add(audioSource1);
+    }
+/*
+    const assetPath2 = 'assets/music/glass.mp3';
+    final bytes = await rootBundle.load(assetPath2);
+    final audioSource = AudioSource.uri(
+      Uri.parse('asset:///$assetPath2'),
+      tag: 'raf raf',
+    );
+
+    concatenatingAudioSource.add(audioSource);*/
+
+    await _audioPlayer.setAudioSource(concatenatingAudioSource);
   }
 
   void _listenForChangesInPlayerState() {
@@ -170,7 +186,7 @@ class PageManager {
     await _audioPlayer.setShuffleModeEnabled(enable);
   }
 
-  void addSong() {
+/*  void addSong() {
     final songNumber = _playlist.length + 1;
     const prefix = 'https://www.soundhelix.com/examples/mp3';
     final song = Uri.parse('$prefix/SoundHelix-Song-$songNumber.mp3');
@@ -181,5 +197,5 @@ class PageManager {
     final index = _playlist.length - 1;
     if (index < 0) return;
     _playlist.removeAt(index);
-  }
+  }*/
 }

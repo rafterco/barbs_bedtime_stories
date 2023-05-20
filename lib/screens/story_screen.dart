@@ -15,30 +15,28 @@ import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 
 class StoryScreen extends StatefulWidget {
-  const StoryScreen(this.story, {Key? key}) :
-        super(key: key);
+  const StoryScreen(this.story, {Key? key}) : super(key: key);
   final Story story;
 
   @override
   State<StoryScreen> createState() => _StoryScreenState();
 }
 
-late final PageManager _pageManager;
+late PageManager _pageManager;
 
 class _StoryScreenState extends State<StoryScreen> {
   AudioPlayer audioPlayer = AudioPlayer();
+
 
   @override
   void initState() {
     super.initState();
 
-    final items = [
-      AudioSource.uri(Uri.parse('https://example.com/track1.mp3')),
-      AudioSource.uri(Uri.parse('https://example.com/track2.mp3')),
-      AudioSource.uri(Uri.parse('https://example.com/track3.mp3')),
+    List<UriAudioSource> audioSources = [
+      AudioSource.uri(Uri.parse(widget.story.url)),
     ];
 
-    _pageManager = PageManager();
+    _pageManager = PageManager(audioSources); //.setInitialPlaylist(items);
 
     //https://stackoverflow.com/questions/73339177/flutter-with-just-audio-is-it-possible-to-create-a-playlist-that-doesnt-aut/73342727#73342727
 
@@ -46,39 +44,54 @@ class _StoryScreenState extends State<StoryScreen> {
     //https://suragch.medium.com/managing-playlists-in-flutter-with-just-audio-c4b8f2af12eb
     //https://github.com/suragch/audio_playlist_flutter_demo/blob/master/final/lib/main.dart#L16
 
-    audioPlayer.setAudioSource(items[0]);
+    //audioPlayer.setAudioSource(items[0]);
 
-    audioPlayer.setAudioSource(
+    /*audioPlayer.setAudioSource(
       ConcatenatingAudioSource(
         children: [
           AudioSource.uri(Uri.parse('asset:///${widget.story.url}'),
           ),
         ],
       ),
-    );
+    );*/
   }
 
   @override
   void dispose() {
-    audioPlayer.dispose();
+    //audioPlayer.dispose();
     _pageManager.dispose();
     super.dispose();
   }
 
-  Stream<SeekBarData> get _seekBarDataStream =>
-      rxdart.Rx.combineLatest2<Duration, Duration?, SeekBarData>(
-          audioPlayer.positionStream, audioPlayer.durationStream, (
-        Duration position,
-        Duration? duration,
-      ) {
-        return SeekBarData(
-          position,
-          duration ?? Duration.zero,
-        );
-      });
-
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            widget.story.coverUrl,
+            fit: BoxFit.cover,
+          ),
+          const _BackgroundFilter(),
+          const Column(
+            children: [
+              CurrentSongTitle(),
+              Playlist(),
+              AddRemoveSongButtons(),
+              AudioProgressBar(),
+              AudioControlButtons(),
+            ],
+          ),
+        ],
+      ),
+    );
+
     return const MaterialApp(
       home: Scaffold(
         body: Padding(
@@ -96,7 +109,7 @@ class _StoryScreenState extends State<StoryScreen> {
       ),
     );
   }
-  /*Widget build(BuildContext context) {
+/*Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -122,8 +135,7 @@ class _StoryScreenState extends State<StoryScreen> {
   }*/
 }
 
-class _MusicPlayer extends StatefulWidget{
-
+class _MusicPlayer extends StatefulWidget {
   _MusicPlayer({
     Key? key,
     required this.story,
@@ -138,10 +150,11 @@ class _MusicPlayer extends StatefulWidget{
   bool favorite = false;
   bool downloaded = false;
 
-  _MusicPlayerState createState()=> _MusicPlayerState();
+  @override
+  _MusicPlayerState createState() => _MusicPlayerState();
 }
 
-class _MusicPlayerState extends State<_MusicPlayer>{
+class _MusicPlayerState extends State<_MusicPlayer> {
   @override
   // TODO: implement widget
   _MusicPlayer get widget => super.widget;
@@ -159,9 +172,9 @@ class _MusicPlayerState extends State<_MusicPlayer>{
           Text(
             widget.story.title,
             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 10),
           Text(
@@ -197,28 +210,32 @@ class _MusicPlayerState extends State<_MusicPlayer>{
                   });
                   //todo save to firebase
 
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: widget.favorite ? Text('Added to favourites') : Text('Removed from favourites') ,
-                  ),);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: widget.favorite
+                          ? Text('Added to favourites')
+                          : Text('Removed from favourites'),
+                    ),
+                  );
                 },
               ),
               IconButton(
-                  onPressed: () async {
-                    final dir = await getApplicationDocumentsDirectory();
-                    final file = File('${dir.path}/raf.file');
+                onPressed: () async {
+                  final dir = await getApplicationDocumentsDirectory();
+                  final file = File('${dir.path}/raf.file');
 
-                    print(dir.path);
-                    print(file);
+                  print(dir.path);
+                  print(file);
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Downloaded'),)
-                    );
-                  },
-                  icon:  const Icon(
-                    Icons.cloud_download,
-                    color: Colors.white,
-                  ),
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Downloaded'),
+                  ));
+                },
+                icon: const Icon(
+                  Icons.cloud_download,
+                  color: Colors.white,
                 ),
+              ),
             ],
           ),
         ],
@@ -269,6 +286,7 @@ class _BackgroundFilter extends StatelessWidget {
 
 class CurrentSongTitle extends StatelessWidget {
   const CurrentSongTitle({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
@@ -285,6 +303,7 @@ class CurrentSongTitle extends StatelessWidget {
 
 class Playlist extends StatelessWidget {
   const Playlist({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -307,22 +326,13 @@ class Playlist extends StatelessWidget {
 
 class AddRemoveSongButtons extends StatelessWidget {
   const AddRemoveSongButtons({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+    return const Padding(
+      padding: EdgeInsets.only(bottom: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FloatingActionButton(
-            onPressed: _pageManager.addSong,
-            child: Icon(Icons.add),
-          ),
-          FloatingActionButton(
-            onPressed: _pageManager.removeSong,
-            child: Icon(Icons.remove),
-          ),
-        ],
       ),
     );
   }
@@ -330,6 +340,7 @@ class AddRemoveSongButtons extends StatelessWidget {
 
 class AudioProgressBar extends StatelessWidget {
   const AudioProgressBar({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ProgressBarState>(
@@ -369,7 +380,7 @@ class AudioProgressBarz extends StatelessWidget {
     );
   }
 
-  /*@override
+/*@override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ProgressBarState>(
       valueListenable: _pageManager.progressNotifier,
@@ -387,11 +398,12 @@ class AudioProgressBarz extends StatelessWidget {
 
 class AudioControlButtons extends StatelessWidget {
   const AudioControlButtons({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 60,
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           RepeatButton(),
@@ -407,6 +419,7 @@ class AudioControlButtons extends StatelessWidget {
 
 class RepeatButton extends StatelessWidget {
   const RepeatButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<RepeatState>(
@@ -435,6 +448,7 @@ class RepeatButton extends StatelessWidget {
 
 class PreviousSongButton extends StatelessWidget {
   const PreviousSongButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -443,7 +457,7 @@ class PreviousSongButton extends StatelessWidget {
         return IconButton(
           icon: Icon(Icons.skip_previous),
           onPressed:
-          (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
+              (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
         );
       },
     );
@@ -452,6 +466,7 @@ class PreviousSongButton extends StatelessWidget {
 
 class PlayButton extends StatelessWidget {
   const PlayButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ButtonState>(
@@ -485,6 +500,7 @@ class PlayButton extends StatelessWidget {
 
 class NextSongButton extends StatelessWidget {
   const NextSongButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -509,8 +525,8 @@ class ShuffleButton extends StatelessWidget {
         return IconButton(
           icon: (isEnabled)
               ? Icon(Icons.shuffle)
-              : Icon(Icons.shuffle, color: Colors.grey),
-          onPressed: _pageManager.onShuffleButtonPressed,
+              : Icon(Icons.shuffle, color: Colors.grey), onPressed: () {  },
+          //onPressed: _pageManager.onShuffleButtonPressed,
         );
       },
     );
