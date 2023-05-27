@@ -136,14 +136,12 @@ class _TrendingStories extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.20,
             child: StreamBuilder<QuerySnapshot>(
               stream: stories,
-              builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,) {
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot,) {
                 if (snapshot.hasError) {
                   return const Text('error downloading stories');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text('downloading data');
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 final data = snapshot.requireData;
