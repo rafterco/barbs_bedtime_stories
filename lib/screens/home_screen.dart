@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const _DiscoverStories(),
-                      const _TrendingStories(),
+                      _TrendingStories(),
                       SizedBox(
                         height: 700,
                         child: _PlaylistStories(playlists: playlists),
@@ -108,16 +110,60 @@ class _PlaylistStories extends StatelessWidget {
   }
 }
 
+Set<Story> _stories = {};
+Set<Playlist> _playLists = {};
+Map<String, Set<Story>> _playListStoriesToStory = HashMap<String, Set<Story>>(); // playlist -> stories?
+
+Future getStories() async {
+  await FirebaseFirestore.instance
+      .collection("playlist")
+      .get()
+      .then((snapshot) => snapshot.docs.forEach((playlist) {
+            _playLists.add(Playlist(
+                title: playlist['title'],
+                stories: playlist['stories'].cast<String>(),
+                imageUrl: playlist['imageUrl']));
+          }));
+
+  await FirebaseFirestore.instance
+      .collection("stories")
+      .get()
+      .then((storySnapshot) => storySnapshot.docs.forEach((story) {
+            _stories.add(Story(
+                title: story['title'],
+                description: story['description'],
+                url: story['url'],
+                coverUrl: story['coverUrl']));
+          }));
+
+  for (Playlist p in _playLists) {
+    for (Story s in _stories) {
+      if (_playListStoriesToStory.containsKey(p.title)) {
+        Set<Story>? storyList = _playListStoriesToStory[p.title];
+        if (p.stories.contains(s.title) && storyList != null && !storyList.contains(s)) {
+          storyList.add(s);
+        }
+      } else {
+        _playListStoriesToStory.putIfAbsent(p.title, () => {s});
+      }
+    }
+  }
+
+  print(_playListStoriesToStory);
+}
+
 class _TrendingStories extends StatelessWidget {
-  const _TrendingStories({
+  _TrendingStories({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    //Future<List<Story>> _stories = _getEventsFromFirestore();
+    getStories();
 
     final Stream<QuerySnapshot> stories =
-    FirebaseFirestore.instance.collection('stories').snapshots();
+        FirebaseFirestore.instance.collection('stories').snapshots();
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -136,7 +182,10 @@ class _TrendingStories extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.20,
             child: StreamBuilder<QuerySnapshot>(
               stream: stories,
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot,) {
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot,
+              ) {
                 if (snapshot.hasError) {
                   return const Text('error downloading stories');
                 }
@@ -148,14 +197,15 @@ class _TrendingStories extends StatelessWidget {
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: data.size,
-
                   itemBuilder: (context, index) {
-                    Story song = Story(
+                    Story story = Story(
                         title: data.docs[index]['title'],
                         description: data.docs[index]['description'],
                         url: data.docs[index]['url'],
                         coverUrl: data.docs[index]['coverUrl']);
-                    return Expanded(child: StoryCard(story: song));
+                    List<Story> stories = [];
+                    stories.add(story);
+                    return Expanded(child: StoryCard(stories: stories));
                   },
                 );
               },
@@ -197,5 +247,3 @@ class _DiscoverStories extends StatelessWidget {
     );
   }
 }
-
-

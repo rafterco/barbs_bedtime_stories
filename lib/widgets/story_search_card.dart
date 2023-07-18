@@ -17,7 +17,7 @@ class StorySearchCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StoryScreen(story)),
+          MaterialPageRoute(builder: (context) => StoryScreen(List.of(story as Iterable<Story>))),
         );
       },
       child: Container(

@@ -15,8 +15,8 @@ import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 
 class StoryScreen extends StatefulWidget {
-  const StoryScreen(this.story, {Key? key}) : super(key: key);
-  final Story story;
+  const StoryScreen(this.stories, {Key? key}) : super(key: key);
+  final List<Story> stories;
 
   @override
   State<StoryScreen> createState() => _StoryScreenState();
@@ -32,9 +32,10 @@ class _StoryScreenState extends State<StoryScreen> {
   void initState() {
     super.initState();
 
-    List<UriAudioSource> audioSources = [
-      AudioSource.uri(Uri.parse(widget.story.url)),
-    ];
+    List<UriAudioSource> audioSources = [];
+    for (Story story in widget.stories) {
+      audioSources.add(AudioSource.uri(Uri.parse(story.url)));
+    }
 
     _pageManager = PageManager(audioSources); //.setInitialPlaylist(items);
 
@@ -75,7 +76,7 @@ class _StoryScreenState extends State<StoryScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            widget.story.coverUrl,
+            widget.stories[0].coverUrl,
             fit: BoxFit.cover,
           ),
           const _BackgroundFilter(),

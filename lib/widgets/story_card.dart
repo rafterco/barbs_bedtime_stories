@@ -7,10 +7,10 @@ import '../models/story_model.dart';
 class StoryCard extends StatelessWidget {
   const StoryCard({
     Key? key,
-    required this.story,
+    required this.stories,
   }) : super(key: key);
 
-  final Story story;
+  final List<Story> stories;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class StoryCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
                 image: DecorationImage(
                   image: AssetImage(
-                    story.coverUrl,
+                    stories[0].coverUrl,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -49,7 +49,7 @@ class StoryCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          story.title,
+                          stories[0].title,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                 color: Colors.deepPurple,
@@ -57,7 +57,7 @@ class StoryCard extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          story.description,
+                          stories[0].description,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                 color: Colors.white,
@@ -80,7 +80,7 @@ class StoryCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StoryScreen(story)),
+          MaterialPageRoute(builder: (context) => StoryScreen(stories)),
         );
       },
     );

@@ -15,24 +15,26 @@ class Story {
     required this.coverUrl,
   });
 
-/*static List<Story> stories = [
-    Story(
-      title: 'Glass',
-      description: 'Glass',
-      url: 'assets/music/glass.mp3',
-      coverUrl: 'assets/images/glass.jpg',
-    ),
-    Story(
-      title: 'Illusions',
-      description: 'Illusions',
-      url: 'assets/music/illusions.mp3',
-      coverUrl: 'assets/images/illusions.jpg',
-    ),
-    Story(
-      title: 'Pray',
-      description: 'Pray',
-      url: 'assets/music/pray.mp3',
-      coverUrl: 'assets/images/pray.jpg',
-    )
-  ];*/
+
+  @override
+  String toString() {
+    return 'Story{title: $title, description: $description, url: $url, coverUrl: $coverUrl, firebaseImage: $firebaseImage}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Story &&
+          runtimeType == other.runtimeType &&
+          title == other.title &&
+          description == other.description &&
+          url == other.url &&
+          coverUrl == other.coverUrl;
+
+  @override
+  int get hashCode =>
+      title.hashCode ^
+      description.hashCode ^
+      url.hashCode ^
+      coverUrl.hashCode;
 }
