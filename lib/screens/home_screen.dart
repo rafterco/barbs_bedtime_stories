@@ -3,10 +3,14 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../global/globals.dart';
 import '../models/playlist_model.dart';
 import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+
+// playlist -> stories?
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -110,16 +114,12 @@ class _PlaylistStories extends StatelessWidget {
   }
 }
 
-Set<Story> _stories = {};
-Set<Playlist> _playLists = {};
-Map<String, Set<Story>> _playListStoriesToStory = HashMap<String, Set<Story>>(); // playlist -> stories?
-
 Future getStories() async {
   await FirebaseFirestore.instance
       .collection("playlist")
       .get()
       .then((snapshot) => snapshot.docs.forEach((playlist) {
-            _playLists.add(Playlist(
+          Global.playLists.add(Playlist(
                 title: playlist['title'],
                 stories: playlist['stories'].cast<String>(),
                 imageUrl: playlist['imageUrl']));
@@ -129,27 +129,27 @@ Future getStories() async {
       .collection("stories")
       .get()
       .then((storySnapshot) => storySnapshot.docs.forEach((story) {
-            _stories.add(Story(
+            Global.stories.add(Story(
                 title: story['title'],
                 description: story['description'],
                 url: story['url'],
                 coverUrl: story['coverUrl']));
           }));
 
-  for (Playlist p in _playLists) {
-    for (Story s in _stories) {
-      if (_playListStoriesToStory.containsKey(p.title)) {
-        Set<Story>? storyList = _playListStoriesToStory[p.title];
+  for (Playlist p in Global.playLists) {
+    for (Story s in Global.stories) {
+      if (Global.playListStoriesToStory.containsKey(p.title)) {
+        Set<Story>? storyList = Global.playListStoriesToStory[p.title];
         if (p.stories.contains(s.title) && storyList != null && !storyList.contains(s)) {
           storyList.add(s);
         }
       } else {
-        _playListStoriesToStory.putIfAbsent(p.title, () => {s});
+        Global.playListStoriesToStory.putIfAbsent(p.title, () => {s});
       }
     }
   }
 
-  print(_playListStoriesToStory);
+  print(Global.playListStoriesToStory);
 }
 
 class _TrendingStories extends StatelessWidget {

@@ -83,7 +83,7 @@ class _StoryScreenState extends State<StoryScreen> {
           const Column(
             children: [
               CurrentSongTitle(),
-              Playlist(),
+              PlaylistWidget(),
               AddRemoveSongButtons(),
               AudioProgressBar(),
               AudioControlButtons(),
@@ -100,7 +100,7 @@ class _StoryScreenState extends State<StoryScreen> {
           child: Column(
             children: [
               CurrentSongTitle(),
-              Playlist(),
+              PlaylistWidget(),
               AddRemoveSongButtons(),
               AudioProgressBar(),
               AudioControlButtons(),
@@ -302,8 +302,8 @@ class CurrentSongTitle extends StatelessWidget {
   }
 }
 
-class Playlist extends StatelessWidget {
-  const Playlist({Key? key}) : super(key: key);
+class PlaylistWidget extends StatelessWidget {
+  const PlaylistWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -370,7 +370,7 @@ class AudioProgressBarz extends StatelessWidget {
           child: Column(
             children: [
               CurrentSongTitle(),
-              Playlist(),
+              PlaylistWidget(),
               AddRemoveSongButtons(),
               AudioProgressBar(),
               AudioControlButtons(),

@@ -1,7 +1,10 @@
+import 'package:barbs_bedtime_stories/models/story_model.dart';
 import 'package:barbs_bedtime_stories/screens/playlist_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../global/globals.dart';
 import '../models/playlist_model.dart';
+import '../screens/story_screen.dart';
 
 class PlaylistCard extends StatelessWidget {
   const PlaylistCard({
@@ -64,9 +67,11 @@ class PlaylistCard extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
+                Set<Story> storiesSet = Global.playListStoriesToStory[playlist.title] ?? <Story>{};
+                List<Story> storiesList = storiesSet.toList();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PlaylistScreen(playlist: playlist,)),
+                    MaterialPageRoute(builder: (context) => StoryScreen(storiesList)),
                 );
               },
               icon: const Icon(

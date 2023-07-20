@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../global/globals.dart';
 import '../models/playlist_model.dart';
 
 class PlaylistScreen extends StatelessWidget {
