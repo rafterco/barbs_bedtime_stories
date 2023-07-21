@@ -110,30 +110,6 @@ class _StoryScreenState extends State<StoryScreen> {
       ),
     );
   }
-/*Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      extendBodyBehindAppBar: true,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(
-            widget.story.coverUrl,
-            fit: BoxFit.cover,
-          ),
-          const _BackgroundFilter(),
-          _MusicPlayer(
-            story: widget.story,
-            seekBarDataStream: _seekBarDataStream,
-            audioPlayer: audioPlayer,
-          ),
-        ],
-      ),
-    );
-  }*/
 }
 
 class _MusicPlayer extends StatefulWidget {

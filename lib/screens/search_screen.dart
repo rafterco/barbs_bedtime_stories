@@ -28,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
     const Text('Stories')
   ];
 
-  List<bool> _selected = <bool>[true, false];
+  final List<bool> _selected = <bool>[true, false];
 
   bool isPlaylist = true;
 

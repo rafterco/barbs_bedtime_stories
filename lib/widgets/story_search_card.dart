@@ -13,11 +13,13 @@ class StorySearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Story> stories = [story];
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => StoryScreen(List.of(story as Iterable<Story>))),
+          MaterialPageRoute(builder: (context) => StoryScreen(stories)),
+          //MaterialPageRoute(builder: (context) => PlaylistScreen(playlist: playlist,)),
         );
       },
       child: Container(
@@ -71,10 +73,7 @@ class StorySearchCard extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => StorySearchCard(
-                            story: story,
-                          )),
+                  MaterialPageRoute(builder: (context) => StoryScreen(stories)),
                 );
               },
               icon: const Icon(
