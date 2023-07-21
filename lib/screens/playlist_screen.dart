@@ -1,8 +1,10 @@
+import 'package:barbs_bedtime_stories/screens/story_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../global/globals.dart';
 import '../models/playlist_model.dart';
+import '../models/story_model.dart';
 
 class PlaylistScreen extends StatelessWidget {
   PlaylistScreen({
@@ -39,7 +41,7 @@ class PlaylistScreen extends StatelessWidget {
               children: [
                 _PlaylistInformation(playlist: playlist),
                 const SizedBox(height: 30),
-                const _PlayOrShuffleSwitch(),
+                _PlayOrShuffleSwitch(playlist, playList_: playlist,),
                 _PlaylistStories(playlist: playlist),
               ],
             ),
@@ -127,12 +129,14 @@ class _PlaylistStories extends StatelessWidget {
 }
 
 class _PlayOrShuffleSwitch extends StatefulWidget {
-  const _PlayOrShuffleSwitch({
-    Key? key,
+  const _PlayOrShuffleSwitch(Playlist playlist, {
+    Key? key, required this.playList_,
   }) : super(key: key);
 
+  final Playlist playList_;
+
   @override
-  State<_PlayOrShuffleSwitch> createState() => _PlayOrShuffleSwitchState();
+  State<_PlayOrShuffleSwitch> createState() => _PlayOrShuffleSwitchState(playList_);
 }
 
 class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
@@ -143,7 +147,11 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
     const Text('Shuffle')
   ];
 
-  List<bool> _selected = <bool>[true, false];
+  final List<bool> _selected = <bool>[true, false];
+
+  _PlayOrShuffleSwitchState(this.playList_);
+
+  final Playlist playList_;
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +178,14 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
                     for (int i = 0; i < _selected.length; i++) {
                       _selected[i] = i == index;
                       //isPlaylist = _selected[0] == true;
+
+                      Set<Story> storiesSet = Global.playListStoriesToStory[playList_.title] ?? <Story>{};
+                      List<Story> storiesList = storiesSet.toList();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StoryScreen(storiesList)),
+                      );
+
                     }
                   });
                 },
