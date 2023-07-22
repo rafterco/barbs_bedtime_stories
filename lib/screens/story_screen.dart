@@ -5,7 +5,6 @@ import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rxdart/rxdart.dart' as rxdart;
 
 import '../models/notifier/play_button_notifier.dart';
 import '../models/notifier/progress_notifier.dart';
@@ -39,27 +38,14 @@ class _StoryScreenState extends State<StoryScreen> {
 
     _pageManager = PageManager(widget.stories); //.setInitialPlaylist(items);
 
-    //https://stackoverflow.com/questions/73339177/flutter-with-just-audio-is-it-possible-to-create-a-playlist-that-doesnt-aut/73342727#73342727
-
     // this is the shit
     //https://suragch.medium.com/managing-playlists-in-flutter-with-just-audio-c4b8f2af12eb
     //https://github.com/suragch/audio_playlist_flutter_demo/blob/master/final/lib/main.dart#L16
 
-    //audioPlayer.setAudioSource(items[0]);
-
-    /*audioPlayer.setAudioSource(
-      ConcatenatingAudioSource(
-        children: [
-          AudioSource.uri(Uri.parse('asset:///${widget.story.url}'),
-          ),
-        ],
-      ),
-    );*/
   }
 
   @override
   void dispose() {
-    //audioPlayer.dispose();
     _pageManager.dispose();
     super.dispose();
   }
@@ -80,33 +66,19 @@ class _StoryScreenState extends State<StoryScreen> {
             fit: BoxFit.cover,
           ),
           const _BackgroundFilter(),
-          const Column(
-            children: [
-              CurrentSongTitle(),
-              PlaylistWidget(),
-              AddRemoveSongButtons(),
-              AudioProgressBar(),
-              AudioControlButtons(),
-            ],
+          const Padding(
+            padding: EdgeInsets.fromLTRB(40, 100, 40, 50),
+            child: Column(
+              children: [
+                CurrentSongTitle(),
+                PlaylistWidget(),
+                AddRemoveSongButtons(),
+                AudioProgressBar(),
+                AudioControlButtons(),
+              ],
+            ),
           ),
         ],
-      ),
-    );
-
-    return const MaterialApp(
-      home: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              CurrentSongTitle(),
-              PlaylistWidget(),
-              AddRemoveSongButtons(),
-              AudioProgressBar(),
-              AudioControlButtons(),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -271,7 +243,7 @@ class CurrentSongTitle extends StatelessWidget {
       builder: (_, title, __) {
         return Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Text(title, style: TextStyle(fontSize: 40)),
+          child: Text(title, style: const TextStyle(fontSize: 40)),
         );
       },
     );
@@ -291,7 +263,7 @@ class PlaylistWidget extends StatelessWidget {
             itemCount: playlistTitles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text('${playlistTitles[index]}'),
+                title: Text(playlistTitles[index]),
               );
             },
           );
@@ -356,21 +328,6 @@ class AudioProgressBarz extends StatelessWidget {
       ),
     );
   }
-
-/*@override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<ProgressBarState>(
-      valueListenable: _pageManager.progressNotifier,
-      builder: (_, value, __) {
-        return ProgressBar(
-          progress: value.current,
-          buffered: value.buffered,
-          total: value.total,
-          onSeek: _pageManager.seek,
-        );
-      },
-    );
-  }*/
 }
 
 class AudioControlButtons extends StatelessWidget {
@@ -452,20 +409,20 @@ class PlayButton extends StatelessWidget {
         switch (value) {
           case ButtonState.loading:
             return Container(
-              margin: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.all(8.0),
               width: 32.0,
               height: 32.0,
               child: CircularProgressIndicator(),
             );
           case ButtonState.paused:
             return IconButton(
-              icon: Icon(Icons.play_arrow),
+              icon: const Icon(Icons.play_arrow),
               iconSize: 32.0,
               onPressed: _pageManager.play,
             );
           case ButtonState.playing:
             return IconButton(
-              icon: Icon(Icons.pause),
+              icon: const Icon(Icons.pause),
               iconSize: 32.0,
               onPressed: _pageManager.pause,
             );
@@ -502,8 +459,8 @@ class ShuffleButton extends StatelessWidget {
         return IconButton(
           icon: (isEnabled)
               ? Icon(Icons.shuffle)
-              : Icon(Icons.shuffle, color: Colors.grey), onPressed: () {  },
-          //onPressed: _pageManager.onShuffleButtonPressed,
+              : Icon(Icons.shuffle, color: Colors.grey),
+          onPressed: _pageManager.onShuffleButtonPressed,
         );
       },
     );

@@ -1,6 +1,5 @@
 import 'package:barbs_bedtime_stories/models/story_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'notifier/play_button_notifier.dart';
@@ -18,7 +17,6 @@ class PageManager {
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
 
   late AudioPlayer _audioPlayer;
-  late ConcatenatingAudioSource _playlist;
   late List<Story> stories;
 
   PageManager(this.stories) {
