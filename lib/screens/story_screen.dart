@@ -458,8 +458,8 @@ class ShuffleButton extends StatelessWidget {
       builder: (context, isEnabled, child) {
         return IconButton(
           icon: (isEnabled)
-              ? Icon(Icons.shuffle)
-              : Icon(Icons.shuffle, color: Colors.grey),
+              ? const Icon(Icons.shuffle)
+              : const Icon(Icons.shuffle, color: Colors.grey),
           onPressed: _pageManager.onShuffleButtonPressed,
         );
       },
