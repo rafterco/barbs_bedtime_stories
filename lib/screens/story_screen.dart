@@ -37,7 +37,7 @@ class _StoryScreenState extends State<StoryScreen> {
       audioSources.add(AudioSource.uri(Uri.parse(story.url)));
     }
 
-    _pageManager = PageManager(audioSources); //.setInitialPlaylist(items);
+    _pageManager = PageManager(widget.stories); //.setInitialPlaylist(items);
 
     //https://stackoverflow.com/questions/73339177/flutter-with-just-audio-is-it-possible-to-create-a-playlist-that-doesnt-aut/73342727#73342727
 

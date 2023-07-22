@@ -19,7 +19,7 @@ class PageManager {
 
   late AudioPlayer _audioPlayer;
   late ConcatenatingAudioSource _playlist;
-  late List<UriAudioSource> stories;
+  late List<Story> stories;
 
   PageManager(this.stories) {
     _init();
@@ -35,28 +35,24 @@ class PageManager {
     _listenForChangesInSequenceState();
   }
 
-  void setInitialPlaylist(List<UriAudioSource> audioSources) async {
+  void setInitialPlaylist(List<Story> stories) async {
     final concatenatingAudioSource = ConcatenatingAudioSource(children: []);
 
-    Uri audioAssetPath;
-    for (var item in audioSources) {
-      audioAssetPath = item.uri;
+    List<UriAudioSource> audioSources = [];
+    for (Story story in stories) {
+      UriAudioSource audioSource = AudioSource.uri(Uri.parse(story.url));
+      audioSources.add(audioSource);
 
-      final audioSource1 = AudioSource.uri(
-        Uri.parse('asset:///$audioAssetPath'),
-        tag: 'edward rafta',
-      );
-      concatenatingAudioSource.add(audioSource1);
+      Uri audioAssetPath;
+
+        audioAssetPath = audioSource.uri;
+
+        final audioSource1 = AudioSource.uri(
+          Uri.parse('asset:///$audioAssetPath'),
+          tag: story.title,
+        );
+        concatenatingAudioSource.add(audioSource1);
     }
-/*
-    const assetPath2 = 'assets/music/glass.mp3';
-    final bytes = await rootBundle.load(assetPath2);
-    final audioSource = AudioSource.uri(
-      Uri.parse('asset:///$assetPath2'),
-      tag: 'raf raf',
-    );
-
-    concatenatingAudioSource.add(audioSource);*/
 
     await _audioPlayer.setAudioSource(concatenatingAudioSource);
   }
