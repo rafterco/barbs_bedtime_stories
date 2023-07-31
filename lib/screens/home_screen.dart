@@ -205,7 +205,8 @@ class _TrendingStories extends StatelessWidget {
                         coverUrl: data.docs[index]['coverUrl']);
                     List<Story> stories = [];
                     stories.add(story);
-                    return Expanded(child: StoryCard(stories: stories));
+
+                    return Row(children: [StoryCard(stories: stories)]);
                   },
                 );
               },

@@ -49,7 +49,8 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
     final Stream<QuerySnapshot> firebasePlaylist =
     FirebaseFirestore.instance.collection('playlist').snapshots();
 
-    uploadImagetFirebase('/Users/colinrafter/StudioProjects/barbs_bedtime_stories/assets/music/pray.mp3');
+    //todo upload functionality is here - works a treat 'uploadImagetFirebase'
+    //uploadImagetFirebase('/Users/colinrafter/StudioProjects/barbs_bedtime_stories/assets/music/pray.mp3');
 
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade600,
