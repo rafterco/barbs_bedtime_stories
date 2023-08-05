@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.barbs_bedtime_stories">
+    package="com.rafterco.barbs_bedtime_stories">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="barbs_bedtime_stories"
         android:name="${applicationName}"
