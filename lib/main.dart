@@ -62,6 +62,7 @@ Future getStories() async {
             title: story['title'],
             description: story['description'],
             url: story['url'],
+            cloudUrl: story['cloudUrl'],
             coverUrl: story['coverUrl']));
   }));
 

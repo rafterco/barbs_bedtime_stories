@@ -133,6 +133,7 @@ Future getStories() async {
                 title: story['title'],
                 description: story['description'],
                 url: story['url'],
+                cloudUrl: story['cloudUrl'],
                 coverUrl: story['coverUrl']));
           }));
 
@@ -148,7 +149,6 @@ Future getStories() async {
       }
     }
   }
-
   print(Global.playListStoriesToStory);
 }
 
@@ -202,6 +202,7 @@ class _TrendingStories extends StatelessWidget {
                         title: data.docs[index]['title'],
                         description: data.docs[index]['description'],
                         url: data.docs[index]['url'],
+                        cloudUrl : data.docs[index]['cloudUrl'],
                         coverUrl: data.docs[index]['coverUrl']);
                     List<Story> stories = [];
                     stories.add(story);

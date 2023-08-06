@@ -24,8 +24,8 @@ class _SearchScreenState extends State<SearchScreen> {
   late Future<List<Story>> _storiesFuture;
 
   List<Widget> fruits = <Widget>[
-    const Text('Playlists'),
-    const Text('Stories')
+    const Text('Stories'),
+    const Text('Playlists')
   ];
 
   final List<bool> _selected = <bool>[true, false];
@@ -103,9 +103,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(20),
                             borderSide: const BorderSide(color: Colors.black)),
                       ),
-                      onChanged: isPlaylist ? searchPlaylists : searchStories,
+                      onChanged: isPlaylist ? searchStories : searchPlaylists,
                     )),
-                isPlaylist ? buildPlaylist() : buildStories(),
+                isPlaylist ?  buildStories() : buildPlaylist(),
               ],
             ),
           ),
@@ -198,11 +198,13 @@ class _SearchScreenState extends State<SearchScreen> {
         var description = doc.get('description');
         var title = doc.get('title');
         var url = doc.get('url');
+        var cloudUrl = doc.get('cloudUrl');
 
         Story story = Story(
             title: title,
             description: description,
             url: url,
+            cloudUrl: cloudUrl,
             coverUrl: coverUrl);
         allStories.add(story);
       }

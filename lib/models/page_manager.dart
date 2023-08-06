@@ -1,4 +1,5 @@
 import 'package:barbs_bedtime_stories/models/story_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -34,25 +35,40 @@ class PageManager {
   }
 
   void setInitialPlaylist(List<Story> stories) async {
-    final concatenatingAudioSource = ConcatenatingAudioSource(children: []);
+    final playlist = ConcatenatingAudioSource(children: []);
 
     List<UriAudioSource> audioSources = [];
-    for (Story story in stories) {
-      UriAudioSource audioSource = AudioSource.uri(Uri.parse(story.url));
-      audioSources.add(audioSource);
 
-      Uri audioAssetPath;
+    for (Story story in stories) {
+      audioSources.add(AudioSource.uri(Uri.parse(story.cloudUrl)));
+    }
+
+    for (Story story in stories) {
+      /*UriAudioSource audioSource = AudioSource.uri(Uri.parse(story.cloudUrl));
+      audioSources.add(audioSource);*/
+
+
+
+      final ref = FirebaseStorage.instance.refFromURL(story.cloudUrl);
+      final fileUrl = await ref.getDownloadURL();
+
+      final song = Uri.parse(fileUrl);
+      AudioSource audio = AudioSource.uri(song, tag: story.title);
+
+      //todo if its available locally then don't use the cloudUrl
+      /*Uri audioAssetPath;
 
         audioAssetPath = audioSource.uri;
 
         final audioSource1 = AudioSource.uri(
-          Uri.parse('asset:///$audioAssetPath'),
+          //Uri.parse('asset:///$audioAssetPath'),
+          Uri.parse(story.cloudUrl),
           tag: story.title,
-        );
-        concatenatingAudioSource.add(audioSource1);
+        );*/
+        playlist.add(audio);
     }
 
-    await _audioPlayer.setAudioSource(concatenatingAudioSource);
+    await _audioPlayer.setAudioSource(playlist);
   }
 
   void _listenForChangesInPlayerState() {

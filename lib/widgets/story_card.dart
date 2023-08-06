@@ -1,6 +1,6 @@
 import 'package:barbs_bedtime_stories/screens/screens.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
 
 import '../models/story_model.dart';
 
@@ -33,7 +33,7 @@ class StoryCard extends StatelessWidget {
               ),
             ),
             Container(
-              height: 50,
+              height: 25,
               width: MediaQuery.of(context).size.width * 0.37,
               margin: const EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
@@ -48,22 +48,68 @@ class StoryCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        FutureBuilder(
+                          future: Future.delayed(const Duration(seconds: 3)),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              // Show a placeholder widget while waiting for the delay
+                              return Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 3, 0, 0),
+                                  child: Text(
+                                    stories[0].title,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // After the delay, return the Marquee widget to start scrolling
+                              return Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(0, 3, 0, 0),
+                                  child: Marquee(
+                                    text: stories[0].title,
+                                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    scrollAxis: Axis.horizontal,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    blankSpace: 100.0,
+                                    velocity: 70.0,
+                                    pauseAfterRound: const Duration(seconds: 3),
+                                    startPadding: 15.0,
+                                    accelerationDuration: const Duration(seconds: 2),
+                                    accelerationCurve: Curves.linear,
+                                    decelerationDuration: const Duration(milliseconds: 500),
+                                    decelerationCurve: Curves.easeOut,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+
+                        /*,Text(
                           stories[0].title,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.bold,
                               ),
-                        ),
-                        Text(
+                        ),*/
+                       /* Text(
                           stories[0].description,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -84,5 +130,15 @@ class StoryCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  bool _willTextOverflow({required String text, required TextStyle style}) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: 100);
+
+    return textPainter.didExceedMaxLines;
   }
 }

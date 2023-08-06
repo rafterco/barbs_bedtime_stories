@@ -5,6 +5,7 @@ class Story {
   final String title;
   final String description;
   final String url;
+  final String cloudUrl;
   final String coverUrl;
   final FirebaseImage firebaseImage = FirebaseImage(storagePath: 'stories');
 
@@ -12,13 +13,14 @@ class Story {
     required this.title,
     required this.description,
     required this.url,
+    required this.cloudUrl,
     required this.coverUrl,
   });
 
 
   @override
   String toString() {
-    return 'Story{title: $title, description: $description, url: $url, coverUrl: $coverUrl, firebaseImage: $firebaseImage}';
+    return 'Story{title: $title, description: $description, url: $url, cloudUrl: $cloudUrl, coverUrl: $coverUrl, firebaseImage: $firebaseImage}';
   }
 
   @override
@@ -29,6 +31,7 @@ class Story {
           title == other.title &&
           description == other.description &&
           url == other.url &&
+          cloudUrl == other.cloudUrl &&
           coverUrl == other.coverUrl;
 
   @override
@@ -36,5 +39,6 @@ class Story {
       title.hashCode ^
       description.hashCode ^
       url.hashCode ^
+      cloudUrl.hashCode ^
       coverUrl.hashCode;
 }
