@@ -1,7 +1,6 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../global/globals.dart';
 import '../models/playlist_model.dart';
@@ -9,11 +8,22 @@ import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
-// playlist -> stories?
 
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  @override
+  _HomeScreenWidgetState createState() => _HomeScreenWidgetState();
+}
+
+class _HomeScreenWidgetState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    var stories = getStories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +88,7 @@ class _PlaylistStories extends StatelessWidget {
       child: Column(
         children: [
           const SectionHeader(title: 'Recommended Playlists'),
+          const SizedBox(height: 10),
           StreamBuilder<QuerySnapshot>(
             stream: firebasePlaylist,
             builder: (
@@ -118,11 +129,14 @@ Future getStories() async {
   await FirebaseFirestore.instance
       .collection("playlist")
       .get()
-      .then((snapshot) => snapshot.docs.forEach((playlist) {
+      .then((snapshot) => snapshot.docs.forEach((playlist) async {
+          final ref = firebase_storage.FirebaseStorage.instance.refFromURL(playlist['imageUrl']);
+          final imageUrl = await ref.getDownloadURL();
+
           Global.playLists.add(Playlist(
                 title: playlist['title'],
                 stories: playlist['stories'].cast<String>(),
-                imageUrl: playlist['imageUrl']));
+                imageUrl: imageUrl));
           }));
 
   await FirebaseFirestore.instance
@@ -149,18 +163,18 @@ Future getStories() async {
       }
     }
   }
-  print(Global.playListStoriesToStory);
+  return Global.playListStoriesToStory;
 }
 
 class _TrendingStories extends StatelessWidget {
-  _TrendingStories({
+  const _TrendingStories({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //Future<List<Story>> _stories = _getEventsFromFirestore();
-    getStories();
+    //getStories();
 
     final Stream<QuerySnapshot> stories =
         FirebaseFirestore.instance.collection('stories').snapshots();

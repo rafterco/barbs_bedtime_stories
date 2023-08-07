@@ -44,11 +44,6 @@ class PageManager {
     }
 
     for (Story story in stories) {
-      /*UriAudioSource audioSource = AudioSource.uri(Uri.parse(story.cloudUrl));
-      audioSources.add(audioSource);*/
-
-
-
       final ref = FirebaseStorage.instance.refFromURL(story.cloudUrl);
       final fileUrl = await ref.getDownloadURL();
 

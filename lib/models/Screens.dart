@@ -7,10 +7,10 @@ import '../screens/search_screen.dart';
 
 class Screens {
   static final List<Widget> screens = [
-    const HomeScreen(),
+    HomeScreen(),
     const FavouritesScreen(),
     const SearchScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
+    HomeScreen(),
+    HomeScreen(),
   ];
 }

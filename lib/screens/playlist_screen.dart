@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../global/globals.dart';
 import '../models/playlist_model.dart';
 import '../models/story_model.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class PlaylistScreen extends StatelessWidget {
   PlaylistScreen({
@@ -223,16 +224,35 @@ class _PlaylistInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
     return Column(
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(15.0),
-          child: Image.network(
+          child: FutureBuilder<String>(
+            future: storage.refFromURL(playlist.imageUrl).getDownloadURL(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                String imageUrl = snapshot.data.toString();
+                return Image.network(
+                  imageUrl,
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: MediaQuery.of(context).size.height * 0.35,
+                  fit: BoxFit.cover,
+                );
+              }
+            },
+          )
+          /*Image.network(
             playlist.imageUrl,
             height: MediaQuery.of(context).size.height * 0.3,
             width: MediaQuery.of(context).size.height * 0.3,
             fit: BoxFit.cover,
-          ),
+          ),*/
         ),
         const SizedBox(height: 30),
         Text(

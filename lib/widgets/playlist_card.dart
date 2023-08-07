@@ -6,6 +6,11 @@ import '../global/globals.dart';
 import '../models/playlist_model.dart';
 import '../screens/story_screen.dart';
 
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 class PlaylistCard extends StatelessWidget {
   const PlaylistCard({
     Key? key,
@@ -17,11 +22,17 @@ class PlaylistCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
+
+
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlaylistScreen(playlist: playlist,)),
+          MaterialPageRoute(
+              builder: (context) => PlaylistScreen(
+                    playlist: playlist,
+                  )),
         );
       },
       child: Container(
@@ -37,12 +48,26 @@ class PlaylistCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(15.0),
-              child: Image.network(
+              child: FutureBuilder<String>(
+                future: storage.refFromURL(playlist.imageUrl).getDownloadURL(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    String imageUrl = snapshot.data.toString();
+                    return Image.network(imageUrl);
+                  }
+                },
+              ),
+
+              /*Image.network(
                 playlist.imageUrl,
                 height: 50,
                 width: 50,
                 fit: BoxFit.cover,
-              ),
+              ),*/
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -67,11 +92,13 @@ class PlaylistCard extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                Set<Story> storiesSet = Global.playListStoriesToStory[playlist.title] ?? <Story>{};
+                Set<Story> storiesSet =
+                    Global.playListStoriesToStory[playlist.title] ?? <Story>{};
                 List<Story> storiesList = storiesSet.toList();
                 Navigator.push(
                   context,
-                    MaterialPageRoute(builder: (context) => StoryScreen(storiesList)),
+                  MaterialPageRoute(
+                      builder: (context) => StoryScreen(storiesList)),
                 );
               },
               icon: const Icon(

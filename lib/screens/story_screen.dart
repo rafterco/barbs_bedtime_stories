@@ -31,11 +31,6 @@ class _StoryScreenState extends State<StoryScreen> {
   void initState() {
     super.initState();
 
-/*    List<UriAudioSource> audioSources = [];
-    for (Story story in widget.stories) {
-      audioSources.add(AudioSource.uri(Uri.parse(story.cloudUrl)));
-    }*/
-
     _pageManager = PageManager(widget.stories); //.setInitialPlaylist(items);
 
     // this is the shit
