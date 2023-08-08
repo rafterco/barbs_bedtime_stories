@@ -175,19 +175,22 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
                 direction: Axis.horizontal,
                 onPressed: (int index) {
                   setState(() {
-                    // The button that is tapped is set to true, and the others to false.
+                    List<Story> storiesList = [];
                     for (int i = 0; i < _selected.length; i++) {
                       _selected[i] = i == index;
-                      //isPlaylist = _selected[0] == true;
 
                       Set<Story> storiesSet = Global.playListStoriesToStory[playList_.title] ?? <Story>{};
-                      List<Story> storiesList = storiesSet.toList();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => StoryScreen(storiesList)),
-                      );
+                      storiesList = storiesSet.toList();
 
                     }
+                    if (storiesList.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>
+                            StoryScreen(storiesList)),
+                      );
+                    }
+
                   });
                 },
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
