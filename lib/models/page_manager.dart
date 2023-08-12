@@ -7,6 +7,10 @@ import 'notifier/play_button_notifier.dart';
 import 'notifier/progress_notifier.dart';
 import 'notifier/repeat_button_notifier.dart';
 
+import 'package:wakelock/wakelock.dart';
+
+
+
 class PageManager {
   final currentSongTitleNotifier = ValueNotifier<String>('');
   final playlistNotifier = ValueNotifier<List<String>>([]);
@@ -32,6 +36,11 @@ class PageManager {
     _listenForChangesInBufferedPosition();
     _listenForChangesInTotalDuration();
     _listenForChangesInSequenceState();
+    _configureAudioPlayer();
+  }
+
+  Future<void> _configureAudioPlayer() async {
+    await Wakelock.enable();
   }
 
   void setInitialPlaylist(List<Story> stories) async {
@@ -159,6 +168,7 @@ class PageManager {
 
   void dispose() {
     _audioPlayer.dispose();
+    Wakelock.disable();
   }
 
   void onRepeatButtonPressed() {
