@@ -6,9 +6,6 @@ import '../global/globals.dart';
 import '../models/playlist_model.dart';
 import '../screens/story_screen.dart';
 
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class PlaylistCard extends StatelessWidget {
@@ -21,9 +18,7 @@ class PlaylistCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
-
 
     return InkWell(
       onTap: () {
@@ -42,32 +37,36 @@ class PlaylistCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.deepPurple.shade800.withOpacity(0.6),
           borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3), // Shadow color
+              spreadRadius: 3, // Spread radius
+              blurRadius: 1, // Blur radius
+              offset: const Offset(0, 1), // Offset in the x and y direction
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: FutureBuilder<String>(
-                future: storage.refFromURL(playlist.imageUrl).getDownloadURL(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    String imageUrl = snapshot.data.toString();
-                    return Image.network(imageUrl);
-                  }
-                },
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: FutureBuilder<String>(
+                  future: storage.refFromURL(playlist.imageUrl).getDownloadURL(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      String imageUrl = snapshot.data.toString();
+                      return Image.network(imageUrl);
+                    }
+                  },
+                ),
               ),
-
-              /*Image.network(
-                playlist.imageUrl,
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-              ),*/
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -86,6 +85,7 @@ class PlaylistCard extends StatelessWidget {
                     '${playlist.stories.length} stories',
                     maxLines: 2,
                     style: Theme.of(context).textTheme.bodySmall,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

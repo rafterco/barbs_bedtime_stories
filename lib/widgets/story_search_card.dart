@@ -19,7 +19,6 @@ class StorySearchCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => StoryScreen(stories)),
-          //MaterialPageRoute(builder: (context) => PlaylistScreen(playlist: playlist,)),
         );
       },
       child: Container(
@@ -27,6 +26,14 @@ class StorySearchCard extends StatelessWidget {
         height: 75,
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3), // Shadow color
+              spreadRadius: 3, // Spread radius
+              blurRadius: 1, // Blur radius
+              offset: const Offset(0, 1), // Offset in the x and y direction
+            ),
+          ],
           color: Colors.deepPurple.shade800.withOpacity(0.6),
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -63,7 +70,7 @@ class StorySearchCard extends StatelessWidget {
                       ),
                     ),
                     Text(story.description,
-                        overflow: TextOverflow.fade,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyMedium!),
                   ],
                 ),

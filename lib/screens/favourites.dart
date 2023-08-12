@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/playlist_model.dart';
-import '../models/story_model.dart';
 import '../widgets/playlist_card.dart';
 import '../widgets/section_header.dart';
 import '../widgets/widgets.dart';
@@ -60,8 +59,9 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
+              const SizedBox(height: 20,),
               const SectionHeader(title: 'Favourites'),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
               StreamBuilder<QuerySnapshot>(
                 stream: firebasePlaylist,
                 builder: (

@@ -60,14 +60,14 @@ class _StoryScreenState extends State<StoryScreen> {
             widget.stories[0].coverUrl,
             fit: BoxFit.cover,
           ),
-          const _BackgroundFilter(),
+          //const _BackgroundFilter(),
           const Padding(
-            padding: EdgeInsets.fromLTRB(40, 100, 40, 50),
+            padding: EdgeInsets.fromLTRB(40, 100, 40, 100),
             child: Column(
               children: [
                 CurrentSongTitle(),
                 PlaylistWidget(),
-                AddRemoveSongButtons(),
+                //AddRemoveSongButtons(),
                 AudioProgressBar(),
                 AudioControlButtons(),
               ],
@@ -153,12 +153,11 @@ class _MusicPlayerState extends State<_MusicPlayer> {
                     widget.favorite = isFavorite;
                   });
                   //todo save to firebase
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: widget.favorite
-                          ? Text('Added to favourites')
-                          : Text('Removed from favourites'),
+                          ? const Text('Added to favourites')
+                          : const Text('Removed from favourites'),
                     ),
                   );
                 },
@@ -237,8 +236,14 @@ class CurrentSongTitle extends StatelessWidget {
       valueListenable: _pageManager.currentSongTitleNotifier,
       builder: (_, title, __) {
         return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(title, style: const TextStyle(fontSize: 40)),
+          padding: const EdgeInsets.only(top: 25.0),
+          child: Text(
+            title,
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
         );
       },
     );
@@ -258,7 +263,21 @@ class PlaylistWidget extends StatelessWidget {
             itemCount: playlistTitles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(playlistTitles[index]),
+                title: Text(
+                  playlistTitles[index],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black,
+                        offset: Offset(1, 1),
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
           );
@@ -301,29 +320,6 @@ class AudioProgressBar extends StatelessWidget {
   }
 }
 
-class AudioProgressBarz extends StatelessWidget {
-  const AudioProgressBarz({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              CurrentSongTitle(),
-              PlaylistWidget(),
-              AddRemoveSongButtons(),
-              AudioProgressBar(),
-              AudioControlButtons(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class AudioControlButtons extends StatelessWidget {
   const AudioControlButtons({Key? key}) : super(key: key);
@@ -384,7 +380,7 @@ class PreviousSongButton extends StatelessWidget {
       valueListenable: _pageManager.isFirstSongNotifier,
       builder: (_, isFirst, __) {
         return IconButton(
-          icon: Icon(Icons.skip_previous),
+          icon: const Icon(Icons.skip_previous, color: Colors.blueGrey),
           onPressed:
               (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
         );
@@ -407,17 +403,18 @@ class PlayButton extends StatelessWidget {
               margin: const EdgeInsets.all(8.0),
               width: 32.0,
               height: 32.0,
-              child: CircularProgressIndicator(),
+              child: const CircularProgressIndicator(),
             );
           case ButtonState.paused:
             return IconButton(
-              icon: const Icon(Icons.play_arrow),
+              //icon: const Icon(Icons.play_arrow),
+              icon: const Icon(Icons.play_arrow, color: Colors.blueGrey),
               iconSize: 32.0,
               onPressed: _pageManager.play,
             );
           case ButtonState.playing:
             return IconButton(
-              icon: const Icon(Icons.pause),
+              icon: const Icon(Icons.pause, color: Colors.blueGrey),
               iconSize: 32.0,
               onPressed: _pageManager.pause,
             );
@@ -436,7 +433,7 @@ class NextSongButton extends StatelessWidget {
       valueListenable: _pageManager.isLastSongNotifier,
       builder: (_, isLast, __) {
         return IconButton(
-          icon: Icon(Icons.skip_next),
+          icon: const Icon(Icons.skip_next, color: Colors.blueGrey),
           onPressed: (isLast) ? null : _pageManager.onNextSongButtonPressed,
         );
       },

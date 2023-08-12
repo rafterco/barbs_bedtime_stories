@@ -79,10 +79,10 @@ class StoryCard extends StatelessWidget {
                                     ),
                                     scrollAxis: Axis.horizontal,
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    blankSpace: 100.0,
+                                    blankSpace: 150.0,
                                     velocity: 70.0,
                                     pauseAfterRound: const Duration(seconds: 3),
-                                    startPadding: 15.0,
+                                    startPadding: 7.0,
                                     accelerationDuration: const Duration(seconds: 2),
                                     accelerationCurve: Curves.linear,
                                     decelerationDuration: const Duration(milliseconds: 500),
@@ -93,23 +93,6 @@ class StoryCard extends StatelessWidget {
                             }
                           },
                         ),
-
-                        /*,Text(
-                          stories[0].title,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                color: Colors.deepPurple,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),*/
-                       /* Text(
-                          stories[0].description,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),*/
                       ],
                     ),
                   ),

@@ -59,6 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
+                const SizedBox(height: 20,),
                 const SectionHeader(title: 'Search library'),
                 const SizedBox(
                   height: 20,
@@ -80,7 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   selectedColor: Colors.white,
                   fillColor: Colors.deepPurple.shade800,
                   color: Colors.white38,
-                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+                  textStyle: const TextStyle(fontWeight: FontWeight.bold),
                   constraints: const BoxConstraints(
                     minHeight: 40.0,
                     minWidth: 80.0,

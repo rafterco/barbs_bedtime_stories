@@ -43,6 +43,7 @@ class PlaylistScreen extends StatelessWidget {
                 _PlaylistInformation(playlist: playlist),
                 const SizedBox(height: 30),
                 _PlayOrShuffleSwitch(playlist, playList_: playlist,),
+                const SizedBox(height: 10),
                 _PlaylistStories(playlist: playlist),
               ],
             ),
@@ -98,25 +99,25 @@ class _PlaylistStories extends StatelessWidget {
                   itemBuilder: (context, index) {
                     String story = data.docs[index]['title'];
 
-                    if (playlist.stories.contains(story)) {
-                      return ListTile(
-                        leading: Text(
-                          '${index + 1}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(fontWeight: FontWeight.bold),
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 0, 20),
+                        child: Column(
+                          children: [
+                            playlist.stories.contains(story) ? const SizedBox(height: 5) : const SizedBox(height: 0),
+                            playlist.stories.contains(story) ? ListTile(
+                              title: Text(
+                                data.docs[index]['title'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(fontWeight: FontWeight.bold),
+
+                              ),
+                              subtitle: Text(data.docs[index]['description']),
+                            ) : const SizedBox(height: 0,),
+                          ],
                         ),
-                        title: Text(
-                          data.docs[index]['title'],
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(data.docs[index]['description']),
                       );
-                    }
                   },
                 ),
               );
@@ -157,6 +158,7 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    Global.getStories();
 
     return GestureDetector(
       onTap: () {
@@ -208,8 +210,6 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
                 children: fruits,
               ),
             ),
-
-
           ],
         ),
       ),
@@ -243,19 +243,13 @@ class _PlaylistInformation extends StatelessWidget {
                 String imageUrl = snapshot.data.toString();
                 return Image.network(
                   imageUrl,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: MediaQuery.of(context).size.height * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  width: MediaQuery.of(context).size.height * 0.30,
                   fit: BoxFit.cover,
                 );
               }
             },
           )
-          /*Image.network(
-            playlist.imageUrl,
-            height: MediaQuery.of(context).size.height * 0.3,
-            width: MediaQuery.of(context).size.height * 0.3,
-            fit: BoxFit.cover,
-          ),*/
         ),
         const SizedBox(height: 30),
         Text(

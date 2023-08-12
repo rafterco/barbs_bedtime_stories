@@ -13,16 +13,16 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenWidgetState createState() => _HomeScreenWidgetState();
+  HomeScreenWidgetState createState() => HomeScreenWidgetState();
 }
 
-class _HomeScreenWidgetState extends State<HomeScreen> {
+class HomeScreenWidgetState extends State<HomeScreen> {
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
 
-    var stories = getStories();
+    Global.getStories();
   }
 
   @override
@@ -53,7 +53,7 @@ class _HomeScreenWidgetState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       const _DiscoverStories(),
-                      _TrendingStories(),
+                      const _TrendingStories(),
                       SizedBox(
                         height: 700,
                         child: _PlaylistStories(playlists: playlists),
@@ -125,7 +125,7 @@ class _PlaylistStories extends StatelessWidget {
   }
 }
 
-Future getStories() async {
+/*void getStories() async {
   await FirebaseFirestore.instance
       .collection("playlist")
       .get()
@@ -163,8 +163,7 @@ Future getStories() async {
       }
     }
   }
-  return Global.playListStoriesToStory;
-}
+}*/
 
 class _TrendingStories extends StatelessWidget {
   const _TrendingStories({
