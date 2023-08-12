@@ -8,7 +8,6 @@ import '../models/story_model.dart';
 import '../widgets/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -17,9 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenWidgetState extends State<HomeScreen> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     Global.getStories();
@@ -172,9 +170,6 @@ class _TrendingStories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Future<List<Story>> _stories = _getEventsFromFirestore();
-    //getStories();
-
     final Stream<QuerySnapshot> stories =
         FirebaseFirestore.instance.collection('stories').snapshots();
 
@@ -215,7 +210,7 @@ class _TrendingStories extends StatelessWidget {
                         title: data.docs[index]['title'],
                         description: data.docs[index]['description'],
                         url: data.docs[index]['url'],
-                        cloudUrl : data.docs[index]['cloudUrl'],
+                        cloudUrl: data.docs[index]['cloudUrl'],
                         coverUrl: data.docs[index]['coverUrl']);
                     List<Story> stories = [];
                     stories.add(story);
