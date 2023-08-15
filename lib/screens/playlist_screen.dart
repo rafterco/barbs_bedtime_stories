@@ -181,7 +181,7 @@ class _PlayOrShuffleSwitchState extends State<_PlayOrShuffleSwitch> {
                     for (int i = 0; i < _selected.length; i++) {
                       _selected[i] = i == index;
 
-                      Set<Story> storiesSet = Global.playListStoriesToStory[playList_.title] ?? <Story>{};
+                      Set<Story> storiesSet = Global.playListTitleToStories[playList_.title] ?? <Story>{};
                       storiesList = storiesSet.toList();
 
                     }

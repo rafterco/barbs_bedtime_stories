@@ -10,7 +10,7 @@ import '../models/story_model.dart';
 class Global {
   static Set<Story> stories = {};
   static Set<Playlist> playLists = {};
-  static Map<String, Set<Story>> playListStoriesToStory = HashMap<String, Set<Story>>();
+  static Map<String, Set<Story>> playListTitleToStories = HashMap<String, Set<Story>>();
 
   static Future<void>  getStories() async {
     await FirebaseFirestore.instance
@@ -41,16 +41,16 @@ class Global {
     await organise();
   }
 
-  static Future<void>  organise() async {
+  static Future<void> organise() async {
     for (Playlist p in Global.playLists) {
       for (Story s in Global.stories) {
-        if (Global.playListStoriesToStory.containsKey(p.title)) {
-          Set<Story>? storyList = Global.playListStoriesToStory[p.title];
+        if (Global.playListTitleToStories.containsKey(p.title)) {
+          Set<Story>? storyList = Global.playListTitleToStories[p.title];
           if (p.stories.contains(s.title) && storyList != null && !storyList.contains(s)) {
             storyList.add(s);
           }
         } else {
-          Global.playListStoriesToStory.putIfAbsent(p.title, () => {s});
+          Global.playListTitleToStories.putIfAbsent(p.title, () => {s});
         }
       }
     }

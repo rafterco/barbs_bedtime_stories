@@ -93,7 +93,7 @@ class PlaylistCard extends StatelessWidget {
             IconButton(
               onPressed: () {
                 Set<Story> storiesSet =
-                    Global.playListStoriesToStory[playlist.title] ?? <Story>{};
+                    Global.playListTitleToStories[playlist.title] ?? <Story>{};
                 List<Story> storiesList = storiesSet.toList();
                 Navigator.push(
                   context,
