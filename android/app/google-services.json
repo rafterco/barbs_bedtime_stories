@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "678335579973",
+    "firebase_url": "https://bedtime-stories-app-ccb9d-default-rtdb.firebaseio.com",
+    "project_id": "bedtime-stories-app-ccb9d",
+    "storage_bucket": "bedtime-stories-app-ccb9d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678335579973:android:46d2000cbcbd6d09dca02c",
+        "android_client_info": {
+          "package_name": "com.rafterco.barbs.sleep.stories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678335579973-en73ugttfvc91u2okourqsbgtk11ahcr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rafterco.barbs.sleep.stories",
+            "certificate_hash": "a20c245916f0c47169244959bc5b7cf2e35690a8"
+          }
+        },
+        {
+          "client_id": "678335579973-867fnrdifd37j523t3b4mp5fgclucepk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXQbRUHmVsRowdoPnwdN5_gyhgfTTy0r0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678335579973-867fnrdifd37j523t3b4mp5fgclucepk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "678335579973-dn58nb9k5a167nmu0qsjqc61g0fa212u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rafterco.barbs.sleep.stories"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678335579973:android:1adedd6fe696fda6dca02c",
+        "android_client_info": {
+          "package_name": "com.rafterco.barbs_bedtime_stories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678335579973-867fnrdifd37j523t3b4mp5fgclucepk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXQbRUHmVsRowdoPnwdN5_gyhgfTTy0r0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678335579973-867fnrdifd37j523t3b4mp5fgclucepk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "678335579973-dn58nb9k5a167nmu0qsjqc61g0fa212u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rafterco.barbs.sleep.stories"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678335579973:android:6deecf43a698607edca02c",
+        "android_client_info": {
+          "package_name": "com.rafterco.bedtime_stories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678335579973-867fnrdifd37j523t3b4mp5fgclucepk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXQbRUHmVsRowdoPnwdN5_gyhgfTTy0r0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678335579973-867fnrdifd37j523t3b4mp5fgclucepk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "678335579973-dn58nb9k5a167nmu0qsjqc61g0fa212u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rafterco.barbs.sleep.stories"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

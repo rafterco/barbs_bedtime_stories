@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support & Help Center - Barbara's Sleep Stories</title>
+    <meta name="description" content="Support and Help Center for Barbara's Sleep Stories. Get assistance, submit story requests, or contact our support team.">
+    <style>
+        :root {
+            --bg-deep: #070B18;
+            --bg-card: #161238;
+            --bg-card-alt: #1E1A4A;
+            --text-primary: #F0EDFF;
+            --text-secondary: #A5A0D0;
+            --accent-gold: #FCD34D;
+            --accent-lavender: #C4B5FD;
+            --border-subtle: rgba(252, 211, 77, 0.18);
+            --border-highlight: rgba(252, 211, 77, 0.45);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 840px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 48px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 28px;
+        }
+        .logo-icon {
+            font-size: 44px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        h1 {
+            color: var(--accent-gold);
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .subtitle {
+            color: var(--accent-lavender);
+            font-size: 1.05rem;
+        }
+        .contact-card {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border-highlight);
+            border-radius: 18px;
+            padding: 30px;
+            text-align: center;
+            margin: 28px 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+        .contact-card h2 {
+            color: var(--accent-gold);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        .contact-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-contact {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #E8C97A 0%, #D4AF37 100%);
+            color: #0D0A1C;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 14px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 20px rgba(232, 201, 122, 0.3);
+        }
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232, 201, 122, 0.45);
+        }
+        .support-email {
+            margin-top: 14px;
+            font-size: 0.95rem;
+            color: var(--accent-lavender);
+        }
+        .support-email a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        h2.section-title {
+            color: var(--accent-gold);
+            font-size: 1.4rem;
+            margin-top: 36px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+        .faq-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+        .faq-question {
+            color: var(--accent-lavender);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .feature-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .feature-box strong {
+            color: var(--accent-gold);
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        .feature-box span {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .footer-links {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .footer-links a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 24px; border-radius: 16px; }
+            h1 { font-size: 1.75rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-icon">🌙</div>
+            <h1>Help & Support Center</h1>
+            <p class="subtitle">Barbara's Sleep Stories — Peaceful Bedtime Support</p>
+        </header>
+
+        <!-- Direct Contact Section -->
+        <div class="contact-card">
+            <h2>Need Assistance or Have a Question?</h2>
+            <p>Whether you have a technical question, want to report an issue, or would like to request a specific bedtime tale for Barbara to narrate, our team is here to help.</p>
+            <a href="mailto:colinrafter82@gmail.com?subject=Barbara's%20Sleep%20Stories%20-%20Support%20Request" class="btn-contact">
+                ✉️ Email Support
+            </a>
+            <div class="support-email">
+                Or contact us directly at <a href="mailto:colinrafter82@gmail.com">colinrafter82@gmail.com</a>
+                <br><span style="font-size:0.85rem; color: var(--text-secondary); margin-top:4px; display:inline-block;">We review and respond to every listener message within 24–48 hours.</span>
+            </div>
+        </div>
+
+        <!-- App Capabilities & Guidance -->
+        <h2 class="section-title">App Features & Quick Help</h2>
+        <div class="feature-grid">
+            <div class="feature-box">
+                <strong>🎧 Background & Screen-Off Play</strong>
+                <span>Lock your iPhone or iPad screen and control bedtime playback seamlessly from the lock screen and Control Center.</span>
+            </div>
+            <div class="feature-box">
+                <strong>⏰ Gentle Fade-Out Sleep Timers</strong>
+                <span>Set custom sleep timers (15m, 30m, 45m, 60m, or End of Story) that fade audio gently into peaceful silence.</span>
+            </div>
+            <div class="feature-box">
+                <strong>🌧️ Ambient Soundscape Mixer</strong>
+                <span>Blend soothing rain, crackling fireplace, ocean tides, or summer night ambient sounds beneath Barbara's narration.</span>
+            </div>
+            <div class="feature-box">
+                <strong>✨ 100% Ad-Free Sanctuary</strong>
+                <span>Zero banner ads, zero video interruptions, and zero tracking. Your bedroom routine remains peaceful and calm.</span>
+            </div>
+        </div>
+
+        <!-- Frequently Asked Questions -->
+        <h2 class="section-title">Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">How do I keep audio playing with the screen locked?</div>
+            <div class="faq-answer">Audio continues playing automatically when you lock your device. Ensure Silent mode or Do Not Disturb settings allow media playback, and you can play, pause, or skip directly from your lock screen.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">How do I set the Sleep Timer?</div>
+            <div class="faq-answer">While listening to any story in the player screen, tap the crescent moon timer icon in the top toolbar to choose 15, 30, 45, 60 minutes, or "End of Story". The story will gently fade out when the timer ends.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Can I request a story or theme for Barbara to record?</div>
+            <div class="faq-answer">Yes! Barbara loves hearing bedtime suggestions from listeners. Send your favorite folklore, classic childhood tale, or tranquil theme to <a href="mailto:colinrafter82@gmail.com?subject=Story%20Suggestion%20for%20Barbara" style="color:var(--accent-gold); text-decoration:none;">colinrafter82@gmail.com</a>.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">How do I restore purchases or manage my subscription?</div>
+            <div class="faq-answer">All purchases and subscriptions are handled securely through Apple's App Store. You can manage or cancel subscriptions anytime in your iPhone / iPad Settings &gt; Apple ID &gt; Subscriptions.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is any personal data collected while I listen?</div>
+            <div class="faq-answer">No. We do not sell data, track your location, or use third-party advertising trackers. Your listening habits remain completely private.</div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="footer-links">
+            <a href="index.html">Home</a> •
+            <a href="support.html">Support</a> •
+            <a href="privacy.html">Privacy Policy</a> •
+            <a href="terms.html">Terms of Service</a> •
+            <a href="eula.html">EULA</a>
+            <p style="margin-top: 14px; font-size: 0.8rem; color: #64748B;">© 2026 Barbara's Sleep Stories. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

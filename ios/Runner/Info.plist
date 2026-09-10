@@ -2,12 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app requires access to the photo library.</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
     <key>NSMicrophoneUsageDescription</key>
-    <string>This app does not require access to the microphone.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app does not requires access to the camera.</string>
+    <string>This app requires audio hardware access to manage background audio sessions, headphone routing, and smooth playback of bedtime stories and ambient sounds.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+    </array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -53,5 +55,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+		<string>https</string>
+		<string>http</string>
+		<string>itms-apps</string>
+	</array>
 </dict>
 </plist>

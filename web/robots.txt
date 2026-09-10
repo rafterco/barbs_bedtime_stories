@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+Sitemap: https://www.barbarasbedtimestories.com/sitemap.xml
+Host: https://www.barbarasbedtimestories.com
