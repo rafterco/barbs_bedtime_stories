@@ -402,16 +402,17 @@ class BarbScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              Row(
-                children: List.generate(
-                  t.rating.clamp(1, 5),
-                  (_) => const Icon(
-                    Icons.star_rounded,
-                    color: AppColors.warmGold,
-                    size: 15,
+              if (t.includeRating && t.rating > 0)
+                Row(
+                  children: List.generate(
+                    t.rating.clamp(1, 5),
+                    (_) => const Icon(
+                      Icons.star_rounded,
+                      color: AppColors.warmGold,
+                      size: 15,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: 10),

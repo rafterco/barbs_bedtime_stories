@@ -5,7 +5,8 @@ class Testimonial {
   final String author;
   final String role;
   final String text;
-  final int rating; // 1 to 5
+  final int rating; // 0 to 5 (0 means no star rating)
+  final bool includeRating;
   final String avatar; // emoji or image URL
   final bool isPublished;
   final int sortOrder;
@@ -18,6 +19,7 @@ class Testimonial {
     required this.role,
     required this.text,
     this.rating = 5,
+    this.includeRating = true,
     this.avatar = '🌙',
     this.isPublished = true,
     this.sortOrder = 0,
@@ -31,12 +33,17 @@ class Testimonial {
   }
 
   factory Testimonial.fromMap(Map<String, dynamic> data, {String id = ''}) {
+    final ratingVal = (data['rating'] as num?)?.toInt() ?? 5;
+    final includeRating = data['includeRating'] as bool? ??
+        (data['showRating'] as bool? ?? (ratingVal > 0));
+
     return Testimonial(
       id: id.isNotEmpty ? id : (data['id'] as String? ?? ''),
       author: data['author'] as String? ?? data['name'] as String? ?? 'Kind Listener',
       role: data['role'] as String? ?? data['location'] as String? ?? 'Bedtime Listener',
       text: data['text'] as String? ?? data['quote'] as String? ?? '',
-      rating: (data['rating'] as num?)?.toInt() ?? 5,
+      rating: ratingVal,
+      includeRating: includeRating && ratingVal > 0,
       avatar: data['avatar'] as String? ?? '🌙',
       isPublished: data['isPublished'] as bool? ?? true,
       sortOrder: (data['sortOrder'] as num?)?.toInt() ?? 0,
@@ -51,6 +58,7 @@ class Testimonial {
       'role': role,
       'text': text,
       'rating': rating,
+      'includeRating': includeRating,
       'avatar': avatar,
       'isPublished': isPublished,
       'sortOrder': sortOrder,

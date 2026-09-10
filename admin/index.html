@@ -1838,6 +1838,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                     <div class="page-title">
                         <h2>💬 Listener Testimonials & Reviews</h2>
                         <p>Manage kind words, sleep transformation stories, and reviews from Barbara's bedtime listeners.</p>
+                    </div>
                     <div style="display:flex; gap:10px; align-items:center;">
                         <button onclick="window.seedDefaultTestimonials()" class="btn-secondary" title="Restore or populate sample testimonials">
                             <span>✨ Seed Defaults</span>
@@ -2181,12 +2182,23 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                             </select>
                         </div>
                         <div>
-                            <label>Rating (Stars)</label>
-                            <select id="testimonial-rating">
-                                <option value="5" selected>★★★★★ (5 Stars)</option>
-                                <option value="4">★★★★☆ (4 Stars)</option>
-                                <option value="3">★★★☆☆ (3 Stars)</option>
-                            </select>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <label style="margin-bottom:0;">Rating</label>
+                                <label style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; cursor:pointer; color:var(--text-secondary); user-select:none;">
+                                    <input type="checkbox" id="testimonial-includeRating" checked onchange="window.toggleTestimonialRating(this.checked)">
+                                    <span style="color:var(--text-main); font-weight:500;">Include Stars</span>
+                                </label>
+                            </div>
+                            <div id="testimonial-rating-container" style="transition: opacity 0.2s;">
+                                <select id="testimonial-rating" onchange="window.onTestimonialRatingChange(this.value)">
+                                    <option value="5" selected>★★★★★ (5 Stars)</option>
+                                    <option value="4">★★★★☆ (4 Stars)</option>
+                                    <option value="3">★★★☆☆ (3 Stars)</option>
+                                    <option value="2">★★☆☆☆ (2 Stars)</option>
+                                    <option value="1">★☆☆☆☆ (1 Star)</option>
+                                    <option value="0">No Stars (Hide Rating)</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -2211,7 +2223,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="window.closeModal('modal-testimonial')">Cancel</button>
-                <button type="button" id="btn-save-testimonial" onclick="document.getElementById('form-testimonial').requestSubmit()" class="btn-primary">Save Testimonial</button>
+                <button type="submit" form="form-testimonial" id="btn-save-testimonial" onclick="if(document.getElementById('form-testimonial').requestSubmit){ document.getElementById('form-testimonial').requestSubmit(); } else { window.saveTestimonial(event); }" class="btn-primary">Save Testimonial</button>
             </div>
         </div>
     </div>
@@ -2304,6 +2316,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                 role: 'Verified Listener',
                 avatar: '🌙',
                 rating: 5,
+                includeRating: true,
                 text: "Barbara's soothing cadence and gentle pauses have completely transformed my bedtime routine. I fall asleep within 10 minutes every single night.",
                 sortOrder: 0,
                 isPublished: true
@@ -2314,6 +2327,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                 role: 'Night Shift Worker',
                 avatar: '✨',
                 rating: 5,
+                includeRating: true,
                 text: 'As someone dealing with shift work sleep disorder, this app is an absolute lifesaver. No sudden loud music or jarring ads—just pure tranquility.',
                 sortOrder: 1,
                 isPublished: true
@@ -2324,6 +2338,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                 role: 'Busy Mom',
                 avatar: '🌿',
                 rating: 5,
+                includeRating: true,
                 text: 'The stories are beautifully written and delightfully wholesome. It feels like someone wrapping you in a warm blanket after a long stressful day.',
                 sortOrder: 2,
                 isPublished: true
@@ -3925,6 +3940,34 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
         // Testimonials Manager
         let draggedTestimonialId = null;
 
+        window.toggleTestimonialRating = (include) => {
+            const sel = document.getElementById('testimonial-rating');
+            const container = document.getElementById('testimonial-rating-container');
+            if (!sel || !container) return;
+            if (include) {
+                if (sel.value === '0') sel.value = '5';
+                sel.disabled = false;
+                container.style.opacity = '1';
+            } else {
+                sel.value = '0';
+                sel.disabled = true;
+                container.style.opacity = '0.5';
+            }
+        };
+
+        window.onTestimonialRatingChange = (val) => {
+            const chk = document.getElementById('testimonial-includeRating');
+            const container = document.getElementById('testimonial-rating-container');
+            if (!chk || !container) return;
+            if (val === '0') {
+                chk.checked = false;
+                container.style.opacity = '0.5';
+            } else {
+                chk.checked = true;
+                container.style.opacity = '1';
+            }
+        };
+
         function attachTestimonialDragEvents() {
             const tbody = document.getElementById('testimonials-tbody');
             if (!tbody) return;
@@ -3932,6 +3975,10 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
             const rows = tbody.querySelectorAll('.story-drag-row');
             rows.forEach(row => {
                 row.addEventListener('dragstart', (e) => {
+                    if (e.target.closest('button, input, select, textarea, .badge, .btn-icon, .btn-order-step, a')) {
+                        e.preventDefault();
+                        return;
+                    }
                     draggedTestimonialId = row.getAttribute('data-id');
                     row.classList.add('dragging');
                     e.dataTransfer.effectAllowed = 'move';
@@ -4045,18 +4092,22 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
             tbody.innerHTML = list.map((t, idx) => {
                 const canDrag = !isSearching;
                 const isPub = t.isPublished !== false;
-                const ratingStars = '★'.repeat(t.rating || 5) + '☆'.repeat(Math.max(0, 5 - (t.rating || 5)));
+                const hasStars = (t.includeRating !== false) && (t.rating !== undefined && t.rating !== null ? Number(t.rating) > 0 : true);
+                const starCount = hasStars ? (Number(t.rating) || 5) : 0;
+                const ratingStars = hasStars
+                    ? '★'.repeat(starCount) + '☆'.repeat(Math.max(0, 5 - starCount))
+                    : '';
 
                 return `
-                <tr class="story-drag-row" ${canDrag ? 'draggable="true"' : ''} data-id="${t.id}" data-index="${idx}">
+                <tr class="story-drag-row" ${canDrag ? 'draggable="true"' : ''} data-id="${t.id}" data-index="${idx}" style="cursor:pointer;" onclick="if(!event.target.closest('button, .drag-handle, .badge, a, input, select')) window.editTestimonial('${t.id}')">
                     <td class="drag-handle" title="${canDrag ? 'Drag and drop to reorder testimonials' : 'Clear search to drag & drop'}" style="${canDrag ? '' : 'opacity:0.3; cursor:not-allowed;'}">⋮⋮</td>
                     <td style="text-align: center; white-space: nowrap;">
                         <div style="display:inline-flex; align-items:center; gap:4px;">
                             <span class="order-badge" title="Position #${idx + 1}">#${idx + 1}</span>
                             ${canDrag ? `
                             <div style="display:inline-flex; flex-direction:column; gap:1px;">
-                                <button class="btn-order-step" onclick="window.moveTestimonialStep('${t.id}', -1)" title="Move up" ${idx === 0 ? 'disabled' : ''}>▲</button>
-                                <button class="btn-order-step" onclick="window.moveTestimonialStep('${t.id}', 1)" title="Move down" ${idx === list.length - 1 ? 'disabled' : ''}>▼</button>
+                                <button class="btn-order-step" onclick="event.stopPropagation(); window.moveTestimonialStep('${t.id}', -1)" title="Move up" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                                <button class="btn-order-step" onclick="event.stopPropagation(); window.moveTestimonialStep('${t.id}', 1)" title="Move down" ${idx === list.length - 1 ? 'disabled' : ''}>▼</button>
                             </div>
                             ` : ''}
                         </div>
@@ -4066,17 +4117,22 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                         <strong style="font-size:0.92rem; color:var(--text-main);">${t.author || 'Anonymous'}</strong>
                         ${t.role ? `<div style="font-size:0.75rem; color:var(--text-muted);">${t.role}</div>` : ''}
                     </td>
-                    <td><span style="color:var(--accent-gold); font-size:0.9rem; letter-spacing:1px;" title="${t.rating || 5} Stars">${ratingStars}</span></td>
+                    <td>
+                        ${hasStars 
+                            ? `<span style="color:var(--accent-gold); font-size:0.9rem; letter-spacing:1px;" title="${starCount} Stars">${ratingStars}</span>` 
+                            : `<span style="color:var(--text-muted); font-size:0.78rem; font-style:italic; background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:8px;">No stars</span>`
+                        }
+                    </td>
                     <td style="font-size:0.85rem; color:var(--text-secondary); max-width:320px; white-space:normal; line-height:1.4;">"${t.text || ''}"</td>
                     <td>
-                        <span class="badge ${isPub ? 'badge-success' : 'badge-warning'}" style="cursor:pointer;" onclick="window.togglePublishTestimonial('${t.id}', ${!isPub})">
+                        <span class="badge ${isPub ? 'badge-success' : 'badge-warning'}" style="cursor:pointer;" onclick="event.stopPropagation(); window.togglePublishTestimonial('${t.id}', ${!isPub})">
                             ● ${isPub ? 'Published' : 'Draft'}
                         </span>
                     </td>
                     <td style="text-align: right; white-space: nowrap;">
                         <div style="display:inline-flex; align-items:center; gap:6px;">
-                            <button onclick="window.editTestimonial('${t.id}')" class="btn-secondary btn-icon" title="Edit testimonial">✏️</button>
-                            <button onclick="window.deleteTestimonial('${t.id}')" class="btn-danger btn-icon" title="Delete testimonial">🗑️</button>
+                            <button type="button" onclick="event.stopPropagation(); window.editTestimonial('${t.id}')" class="btn-secondary btn-icon" title="Edit testimonial">✏️</button>
+                            <button type="button" onclick="event.stopPropagation(); window.deleteTestimonial('${t.id}')" class="btn-danger btn-icon" title="Delete testimonial">🗑️</button>
                         </div>
                     </td>
                 </tr>
@@ -4103,6 +4159,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                         role: t.role,
                         avatar: t.avatar,
                         rating: t.rating,
+                        includeRating: t.includeRating !== false,
                         text: t.text,
                         sortOrder: t.sortOrder,
                         isPublished: t.isPublished,
@@ -4129,36 +4186,68 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
             document.getElementById('testimonial-author').value = '';
             document.getElementById('testimonial-role').value = '';
             document.getElementById('testimonial-avatar').value = '🌙';
-            document.getElementById('testimonial-rating').value = '5';
+            document.getElementById('testimonial-includeRating').checked = true;
+            const ratingSel = document.getElementById('testimonial-rating');
+            ratingSel.value = '5';
+            ratingSel.disabled = false;
+            document.getElementById('testimonial-rating-container').style.opacity = '1';
             document.getElementById('testimonial-text').value = '';
             document.getElementById('testimonial-sortOrder').value = allTestimonials.length;
             document.getElementById('testimonial-isPublished').checked = true;
             document.getElementById('testimonial-modal-title').textContent = 'Add Testimonial';
-            openModal('modal-testimonial');
+            window.openModal('modal-testimonial');
         };
 
         window.editTestimonial = (id) => {
-            const t = allTestimonials.find(x => x.id === id);
-            if (!t) return;
-            document.getElementById('testimonial-id').value = t.id;
+            if (!id) return;
+            const t = allTestimonials.find(x => String(x.id) === String(id));
+            if (!t) {
+                window.showToast('Testimonial not found: ' + id, 'error');
+                return;
+            }
+            document.getElementById('testimonial-id').value = t.id || '';
             document.getElementById('testimonial-author').value = t.author || '';
             document.getElementById('testimonial-role').value = t.role || '';
-            document.getElementById('testimonial-avatar').value = t.avatar || '🌙';
-            document.getElementById('testimonial-rating').value = String(t.rating || 5);
+            
+            // Avatar
+            const avatarSelect = document.getElementById('testimonial-avatar');
+            if (t.avatar) {
+                let optionExists = Array.from(avatarSelect.options).some(o => o.value === t.avatar);
+                if (!optionExists) {
+                    const opt = document.createElement('option');
+                    opt.value = t.avatar;
+                    opt.textContent = t.avatar;
+                    avatarSelect.appendChild(opt);
+                }
+                avatarSelect.value = t.avatar;
+            } else {
+                avatarSelect.value = '🌙';
+            }
+
+            // Stars / Rating
+            const hasStars = (t.includeRating !== false) && (t.rating !== undefined && t.rating !== null ? Number(t.rating) > 0 : true);
+            const ratingVal = hasStars ? String(t.rating || 5) : '0';
+            document.getElementById('testimonial-includeRating').checked = hasStars;
+            const ratingSel = document.getElementById('testimonial-rating');
+            ratingSel.value = ratingVal;
+            ratingSel.disabled = !hasStars;
+            document.getElementById('testimonial-rating-container').style.opacity = hasStars ? '1' : '0.5';
+
             document.getElementById('testimonial-text').value = t.text || '';
             document.getElementById('testimonial-sortOrder').value = t.sortOrder ?? 0;
             document.getElementById('testimonial-isPublished').checked = t.isPublished !== false;
             document.getElementById('testimonial-modal-title').textContent = 'Edit Testimonial';
-            openModal('modal-testimonial');
+            window.openModal('modal-testimonial');
         };
 
         window.saveTestimonial = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('testimonial-id').value;
+            if (e && e.preventDefault) e.preventDefault();
+            const id = document.getElementById('testimonial-id').value.trim();
             const author = document.getElementById('testimonial-author').value.trim();
             const role = document.getElementById('testimonial-role').value.trim();
-            const avatar = document.getElementById('testimonial-avatar').value;
-            const rating = parseInt(document.getElementById('testimonial-rating').value) || 5;
+            const avatar = document.getElementById('testimonial-avatar').value || '🌙';
+            const includeRating = document.getElementById('testimonial-includeRating').checked && document.getElementById('testimonial-rating').value !== '0';
+            const rating = includeRating ? (parseInt(document.getElementById('testimonial-rating').value) || 5) : 0;
             const text = document.getElementById('testimonial-text').value.trim();
             const sortOrder = parseInt(document.getElementById('testimonial-sortOrder').value) || 0;
             const isPublished = document.getElementById('testimonial-isPublished').checked;
@@ -4169,8 +4258,10 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
             }
 
             const btn = document.getElementById('btn-save-testimonial');
-            btn.disabled = true;
-            btn.textContent = 'Saving...';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+            }
 
             try {
                 const data = {
@@ -4178,6 +4269,7 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
                     role,
                     avatar,
                     rating,
+                    includeRating,
                     text,
                     sortOrder,
                     isPublished,
@@ -4186,26 +4278,32 @@ Good sleep is essential to our well-being, helping support memory, learning, moo
 
                 if (id) {
                     await setDoc(doc(db, 'testimonials', id), data, { merge: true });
-                    const idx = allTestimonials.findIndex(x => x.id === id);
-                    if (idx !== -1) allTestimonials[idx] = { ...allTestimonials[idx], ...data };
-                    window.showToast('Testimonial updated!');
+                    const idx = allTestimonials.findIndex(x => String(x.id) === String(id));
+                    if (idx !== -1) {
+                        allTestimonials[idx] = { ...allTestimonials[idx], ...data, id };
+                    } else {
+                        allTestimonials.push({ id, ...data });
+                    }
+                    window.showToast('✨ Testimonial updated!');
                 } else {
                     data.createdAt = serverTimestamp();
                     const newDocRef = doc(collection(db, 'testimonials'));
                     await setDoc(newDocRef, data);
                     allTestimonials.push({ id: newDocRef.id, ...data });
-                    window.showToast('Testimonial added!');
+                    window.showToast('✨ Testimonial added!');
                 }
 
                 allTestimonials.sort((a, b) => (a.sortOrder ?? 999) - (b.sortOrder ?? 999));
-                closeModal('modal-testimonial');
+                window.closeModal('modal-testimonial');
                 renderTestimonials(document.getElementById('testimonials-search')?.value || '');
             } catch (err) {
-                console.error(err);
+                console.error('Error saving testimonial:', err);
                 window.showToast('Error saving testimonial: ' + err.message, 'error');
             } finally {
-                btn.disabled = false;
-                btn.textContent = 'Save Testimonial';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Testimonial';
+                }
             }
         };
 

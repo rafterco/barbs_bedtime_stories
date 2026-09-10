@@ -44,6 +44,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // ── Testimonials ──
+    // Public read (published only), admin read/write
+    match /testimonials/{testimonialId} {
+      allow read: if resource.data.isPublished == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
     // ── Users ──
     // Users can only read/write their own data
     match /users/{userId} {
